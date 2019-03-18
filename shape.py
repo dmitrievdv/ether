@@ -9,6 +9,7 @@ fig, ax = subplots()
 ax.set_title( 'scale: {:<.2e}'.format(1.0) )
 subplots_adjust(left=0.25, bottom=0.25) 
 l, = plot([1], [0], 'r-',markersize=1.)
+ll, = plot([1], [0], 'b-',markersize=1.)
 ax.axis('scaled')
 ax.set_xlim(-2,2)
 ax.set_ylim(-2,2)
@@ -22,13 +23,17 @@ slaC =  Slider(axaC, 'a', -pi, pi, valinit=0)
 slrC =  Slider(axrC, 'r', 0, 2, valinit=1)
 slN =  Slider(axN, 'N', 1., 4, valinit=2.)
 
-def draw(N,C):
+def draw(N,aC,rC):
     rN =range(N)
     P = 51
     rss = zeros((2*P,)) 
     rss[:P] = linspace(-2,2,P)
     rss[P:] = linspace(-2,2,P)
     iss = zeros((2*P,))
+    piss = zeros((P,))
+    puss = zeros((P,))
+    C = rC*(cos(aC) + 1j*sin(aC))
+    
 
     for k in range(P):
         rS = rss[k]
@@ -48,6 +53,11 @@ def draw(N,C):
                     diS/=2
                     break
         iss[k]=iS if iS > 1e-3 else None
+        argS = rss[k]*pi/2
+        x = cos(argS)*(1+rC*rC/4)
+        y = (1-rC*rC/4)*sin(argS)
+        puss[k]=x*cos(aC)-y*sin(aC) 
+        piss[k]=y*cos(aC)+x*sin(aC)
         iS = -2
         diS = iS/2
         for i in range(12):
@@ -69,7 +79,8 @@ def draw(N,C):
     b = iss[P//2]
     a = 2-iss[P//2]
     print(C,a,b)
-    l.set_data(rss, iss)
+    l.set_data(puss,piss)
+    ll.set_data(rss,iss)
     # ax.set_title('scale: {:<.2e}'.format(mabs) )
     ax.axis('scaled')
     ax.set_xlim(-2,2)
@@ -82,9 +93,8 @@ def draw(N,C):
 def update(val):
     aC = slaC.val
     rC = slrC.val
-    C = rC*(cos(aC) + 1j*sin(aC))
     N = int(exp(slN.val*log(1e1)))
-    draw(N,C)
+    draw(N,aC,rC)
 
 slrC.on_changed(update)
 slaC.on_changed(update)
