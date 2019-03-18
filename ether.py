@@ -24,8 +24,8 @@ axSrMbutt = axes([0.05, 0.045, 0.15, 0.04])
 slS =  Slider(axS, 'S', -pi, pi, valinit=pi/2)
 slM =  Slider(axM, 'M', -4, 4, valinit=1)
 slC =  Slider(axC, 'C', 0., 1, valinit=.5)
-slF =  Slider(axF, 'F', 0, pi, valinit=pi/2)
-slN =  Slider(axN, 'N', 0., 4, valinit=3.)
+slF =  Slider(axF, 'F', 0, pi, valinit=pi/3)
+slN =  Slider(axN, 'N', 0., 5, valinit=3.)
 tbSrM = TextBox(axSrM, 'S/M')
 bSrM = Button(axSrMbutt, 'inverse')
 SrMset = False
@@ -65,8 +65,8 @@ def update(val):
         slS.disconnect(0)
         slS.cnt = 0
         slS.on_changed(update)
-    argS = slS.val
     F = slF.val
+    argS = slS.val - F
     z = slC.val**2
     C = slC.val*2*(cos(F)+1j*sin(F))
     M = slM.val
@@ -147,5 +147,8 @@ slC.on_changed(update_n)
 slF.on_changed(update_n)
 tbSrM.on_submit(update_txt)
 show()
+
+
+
 
 
