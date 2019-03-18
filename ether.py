@@ -6,16 +6,17 @@ import matplotlib.text as txt
 
 fig, ax = subplots()
 ax.set_title( 'scale: {:<.2e}'.format(1.0) )
-subplots_adjust(left=0.25, bottom=0.25)
+subplots_adjust(left=0.25, bottom=0.25) 
 l, = plot([1], [0], 'r.',markersize=1.)
 ax.axis('scaled')
 ax.set_xlim(-1,1)
 ax.set_ylim(-1,1)
 
-axS = axes([0.25, 0.15, 0.65, 0.03], facecolor='gray')
-axM = axes([0.25, 0.11, 0.65, 0.03], facecolor='grey')
-axC = axes([0.25, 0.07, 0.65, 0.03], facecolor='grey')
-axN = axes([0.25, 0.03, 0.65, 0.03], facecolor='green')
+axS = axes([0.25, 0.17, 0.65, 0.03], facecolor='gray')
+axM = axes([0.25, 0.13, 0.65, 0.03], facecolor='grey')
+axC = axes([0.25, 0.09, 0.65, 0.03], facecolor='grey')
+axF = axes([0.25, 0.05, 0.65, 0.03], facecolor='grey')
+axN = axes([0.25, 0.01, 0.65, 0.03], facecolor='green')
 axSrM = axes([0.05, 0.085, 0.15, 0.06])
 axSrMbutt = axes([0.05, 0.045, 0.15, 0.04])
 # SrMtxt = txt.Text(text = '1.0')
@@ -23,7 +24,8 @@ axSrMbutt = axes([0.05, 0.045, 0.15, 0.04])
 slS =  Slider(axS, 'S', -pi, pi, valinit=pi/2)
 slM =  Slider(axM, 'M', -4, 4, valinit=1)
 slC =  Slider(axC, 'C', 0., 1, valinit=.5)
-slN =  Slider(axN, 'N', 0., 4, valinit=2.)
+slF =  Slider(axF, 'F', 0, pi, valinit=pi/2)
+slN =  Slider(axN, 'N', 0., 4, valinit=3.)
 tbSrM = TextBox(axSrM, 'S/M')
 bSrM = Button(axSrMbutt, 'inverse')
 SrMset = False
@@ -38,7 +40,7 @@ def draw(M,N,S,C):
         a[n] = an
         if abs(an)> mabs:
             mabs = abs(an)
-        an = an *(S + 2*C*sin(n*M))
+        an = an *(S + C*sin(n*M))
     l.set_data(a.real/mabs, a.imag/mabs)
     ax.set_title('scale: {:<.2e}'.format(mabs) )
     ax.axis('scaled')
@@ -64,10 +66,14 @@ def update(val):
         slS.cnt = 0
         slS.on_changed(update)
     argS = slS.val
-    C = slC.val
+    F = slF.val
+    z = slC.val**2
+    C = slC.val*2*(cos(F)+1j*sin(F))
     M = slM.val
     N = int(exp(slN.val*log(1e1)))
-    S = cos(argS)*(1+C*C) + (1-C*C)*1j*sin(argS)
+    x = cos(argS)*(1+z)
+    y = (1-z)*sin(argS)
+    S = x*cos(F)-y*sin(F) + 1j*(y*cos(F)+x*sin(F))
     draw(M,N,S,C)
     SrMset = False
 
@@ -86,7 +92,6 @@ def update_txt(val):
 
 def update_rel(val):
     global SrMset
-    C = slC.val
     if(not SrMinv):
         M = slM.val
         argS = float(tbSrM.text)*M
@@ -100,7 +105,13 @@ def update_rel(val):
         slM.set_val(M)
         SrMset = True
     N = int(exp(slN.val*log(1e1)))
-    S = cos(argS)*(1+C*C) + (1-C*C)*1j*sin(argS)
+    F = slF.val
+    z = slC.val**2
+    C = slC.val*2*(cos(F)+1j*sin(F))
+    N = int(exp(slN.val*log(1e1)))
+    x = cos(argS)*(1+z)
+    y = (1-z)*sin(argS)
+    S = x*cos(F)-y*sin(F) + 1j*(y*cos(F)+x*sin(F))
     draw(M,N,S,C)
     
 def inverse_rel(val):
@@ -127,10 +138,14 @@ def inverse_rel(val):
         pass 
 
 # print()
+update_n(1)
 bSrM.on_clicked(inverse_rel)
 slS.on_changed(update)
 slN.on_changed(update_n)
 slM.on_changed(update)
 slC.on_changed(update_n)
+slF.on_changed(update_n)
 tbSrM.on_submit(update_txt)
 show()
+
+
