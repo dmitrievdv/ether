@@ -13,13 +13,13 @@ ax.axis('scaled')
 ax.set_xlim(-2,2)
 ax.set_ylim(-2,2)
 
-axiC = axes([0.25, 0.15, 0.65, 0.03], facecolor='gray')
+axaC = axes([0.25, 0.15, 0.65, 0.03], facecolor='gray')
 axrC = axes([0.25, 0.11, 0.65, 0.03], facecolor='grey')
 axN = axes([0.25, 0.03, 0.65, 0.03], facecolor='green')
 # SrMtxt = txt.Text(text = '1.0')
 
-sliC =  Slider(axiC, 'b', -1, 2, valinit=0)
-slrC =  Slider(axrC, 'a', -1, 2, valinit=1)
+slaC =  Slider(axaC, 'a', -pi, pi, valinit=0)
+slrC =  Slider(axrC, 'r', 0, 2, valinit=1)
 slN =  Slider(axN, 'N', 1., 4, valinit=2.)
 
 def draw(N,C):
@@ -80,14 +80,14 @@ def draw(N,C):
 
     
 def update(val):
-    iC = sliC.val
+    aC = slaC.val
     rC = slrC.val
-    C = rC + 1j*iC
+    C = rC*(cos(aC) + 1j*sin(aC))
     N = int(exp(slN.val*log(1e1)))
     draw(N,C)
 
 slrC.on_changed(update)
-sliC.on_changed(update)
+slaC.on_changed(update)
 slN.on_changed(update)
 show()
 
