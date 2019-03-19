@@ -17,8 +17,9 @@ axM = axes([0.25, 0.13, 0.65, 0.03], facecolor='grey')
 axC = axes([0.25, 0.09, 0.65, 0.03], facecolor='grey')
 axF = axes([0.25, 0.05, 0.65, 0.03], facecolor='grey')
 axN = axes([0.25, 0.01, 0.65, 0.03], facecolor='green')
-axSrM = axes([0.05, 0.085, 0.15, 0.06])
-axSrMbutt = axes([0.05, 0.045, 0.15, 0.04])
+axSrM = axes([0.05, 0.065, 0.15, 0.06])
+axSrMbutt = axes([0.05, 0.025, 0.15, 0.04])
+axSpi = axes([0.05, 0.135, 0.15, 0.06])
 # SrMtxt = txt.Text(text = '1.0')
 
 slS =  Slider(axS, 'S', -pi, pi, valinit=pi/2)
@@ -28,10 +29,20 @@ slF =  Slider(axF, 'F', 0, pi, valinit=pi/3)
 slN =  Slider(axN, 'N', 0., 5, valinit=3.)
 tbSrM = TextBox(axSrM, 'S/M')
 bSrM = Button(axSrMbutt, 'inverse')
+tbSpi = TextBox(axSpi, 'pi/S')
 SrMset = False
 SrMinv = False
 
-def draw(M,N,S,C):
+def draw():
+    N = int(exp(slN.val*log(1e1)))
+    F = slF.val
+    M = slM.val
+    argS = slS.val -F
+    z = slC.val**2
+    C = slC.val*2*(cos(F)+1j*sin(F))
+    x = cos(argS)*(1+z)
+    y = (1-z)*sin(argS)
+    S = x*cos(F)-y*sin(F) + 1j*(y*cos(F)+x*sin(F))
     rN =range(N)
     a = zeros((N,),dtype = complex)
     an = 1
@@ -65,22 +76,13 @@ def update(val):
         slS.disconnect(0)
         slS.cnt = 0
         slS.on_changed(update)
-    F = slF.val
-    argS = slS.val - F
-    z = slC.val**2
-    C = slC.val*2*(cos(F)+1j*sin(F))
-    M = slM.val
-    N = int(exp(slN.val*log(1e1)))
-    x = cos(argS)*(1+z)
-    y = (1-z)*sin(argS)
-    S = x*cos(F)-y*sin(F) + 1j*(y*cos(F)+x*sin(F))
-    draw(M,N,S,C)
+    draw()
     SrMset = False
 
 def update_txt(val):
     global SrMset
     if(not SrMinv):
-        slM.disconnect(0)
+        slM.disconnect(0)       
         slM.cnt = 0
         cid = slM.on_changed(update_rel)
     else:
@@ -104,15 +106,7 @@ def update_rel(val):
         SrMset = False
         slM.set_val(M)
         SrMset = True
-    N = int(exp(slN.val*log(1e1)))
-    F = slF.val
-    z = slC.val**2
-    C = slC.val*2*(cos(F)+1j*sin(F))
-    N = int(exp(slN.val*log(1e1)))
-    x = cos(argS)*(1+z)
-    y = (1-z)*sin(argS)
-    S = x*cos(F)-y*sin(F) + 1j*(y*cos(F)+x*sin(F))
-    draw(M,N,S,C)
+    draw()
     
 def inverse_rel(val):
     global SrMinv
@@ -137,6 +131,12 @@ def inverse_rel(val):
     except:
         pass 
 
+def update_spi(val):
+    slS.set_val(pi/float(tbSpi.text))
+    update(val)
+
+    
+
 # print()
 update_n(1)
 bSrM.on_clicked(inverse_rel)
@@ -146,9 +146,7 @@ slM.on_changed(update)
 slC.on_changed(update_n)
 slF.on_changed(update_n)
 tbSrM.on_submit(update_txt)
+tbSpi.on_submit(update_spi)
 show()
-
-
-
 
 
