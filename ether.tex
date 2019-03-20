@@ -60,7 +60,7 @@
     \end{definition}
 
     \begin{definition}
-        The torsion is called a \red{jerk torsion} if $\mu \in \pir$. Otherwise, in case of $\pi$-irrational torsion $\mu \in \pirr$, it is called a \blue{sleek torsion}. 
+        The torsion is called a \blue{shaggy torsion} if $\mu \in \pir$. Otherwise, in case of $\pi$-irrational torsion $\mu \in \pirr$, it is called a \blue{sleek torsion}. 
     \end{definition} 
 
     \begin{definition}
@@ -68,21 +68,37 @@
     \end{definition} 
 
     \begin{definition}\label{def:brim}
-        A \blue{brim} set $B(t)$ for fixed frond $t$ is such a set of whorls that $$
+        A \blue{brim} $B(t)$ for fixed frond $t$ is such a set of whorls that $$
             s \in B(t) \Leftrightarrow \exists \limsup_{n \to \infty}(\rho_{a_n})>\liminf_{n \to \infty}(\rho_{a_n})>0
+        .$$  
+    \end{definition} 
+    \begin{definition}\label{def:frill}
+        Analogously a \blue{frill} $F(s)$ for fixed whorl $s$ is such a set of fronds that $$
+            t \in F(s) \Leftrightarrow \exists \limsup_{n \to \infty}(\rho_{a_n})>\liminf_{n \to \infty}(\rho_{a_n})>0
         .$$  
     \end{definition} 
 
     \begin{theorem}
-        If the jerk torsion $\mu = \frac{2\pi M}{N}$ for some integers $M \in \mathbb Z$ and $N \in \mathbb N$ then the brim consists of roots of the polynomial$$
-            1 - \prod_{n=1}^{N} \rho_{r_n}      
-        $$
+        $$ 
+            s \in B(t) \Leftrightarrow t \in F(s)
+        .$$
+    \end{theorem}
+    \begin{proof}
+        By definition.
+    \end{proof}
+
+
+    \begin{theorem}
+        If the shaggy torsion is such that
+        $\mu = \frac{2\pi M}{N}$ for some integers $M \in \mathbb Z,\, N \in \mathbb N$ and  $\gcd(M,N)=1$, then the brim and the frill each consist of roots all of the polynomials$$
+            P_k(s,t) = 1 - \prod_{n=1}^{kN} \rho_{r_n}, \qquad k \in \mathbb N      
+        $$ with a corresponding variable fixed. 
         % , or in other words
         % $$s \in B(t) \Leftrightarrow  
         % \sum_{n=1}^{N} \ln (\rho_{r_n}) = 0$$
     \end{theorem}
     \begin{proof}
-        This is obvious.%, e.g. see the next theorem (Theorem~\ref{th:intbrim}).
+        This is plausible.%, e.g. see the next theorem (Theorem~\ref{th:intbrim}).
     \end{proof}
 
     \begin{theorem}\label{th:intbrim}
@@ -92,7 +108,7 @@
         .$$
     \end{theorem}
     \begin{proof}
-        The condition for $s$ to be in the brim (Def. \ref{def:brim}) can be written as 
+        The condition for $s$ to be in the brim (Definition~\ref{def:brim}) can be written as 
         \be\label{eq:brim}
             s \in B(t) \Leftrightarrow \exists  l>0 
             %\in \mathbb R 
@@ -109,9 +125,18 @@
              \exists  l>0  %\in \mathbb R 
              :\; \forall N,M %\in \mathbb N 
              \; \left|\sum_{n=M}^{M+N}\ln\rho_{ r_n} \right| < 2l
-        .\ee
-        Since $ \rho_{r_1} = |s + 2t \sin\mu|$ is a continuous function of $\mu$  and the torsion is $\pi$-irrational, \red{this somehow means that} (\ref{eq:dis}) is equivalent to $$
-            0 =\int_0^{2\pi} \ln (\rho_{r_1}) d\mu = \int_0^{2\pi} \frac12 \ln\left((x_s+ 2x_t \sin\mu)^2+(y_s + 2y_t \sin\mu)^2\right)d\mu 
+        .\ee 
+        Since the torsion is sleek, one can always choose arbitrarily large $N$ and yet $N\mu/pi$ close enough to an integer that \be\label{eq:appint}
+            \sum_{n=M}^{M+N}\ln\rho_{ r_n} = \sum_{n=M}^{M+N}\ln|s + 2t \sin\mu| = \int_0^{2\pi} \ln |s + 2t \sin\mu| d\mu + \frac{2\pi\xi\delta(s,t)}N  = I +  \frac{2\pi\xi\delta(s,t)}N,
+        \ee where $0 \le \mu_n = \mu n - 2\pi k < 2 \pi,\, -1\le\xi\le1 $ and  $$
+            \delta(s,t)= \max_{\mu}\left| \frac{\df{\rho_{ r_1}}}{\df{\mu}} \right|,
+        $$  because ${\rho_{ r_1}}$ is a smooth function of $\mu$.
+        The equation (\ref{eq:appint}) written with $M=k*N$ for $k<L$ implies $$
+            2l>\left|\sum_{n=N}^{LN}\ln\rho_{ r_n}\right| >\left|\frac L 2 I \right|,
+        $$
+        because one can always keep the relation $L/N$ smaller than $I$ for arbitrarily chosen $L$.   
+        This implies that $ \exists l>0:\; \forall L\; |I|<4l/L$ and hence $$
+            0 = I = \int_0^{2\pi} \ln (\rho_{r_1}) d\mu 
         .$$
     \end{proof}
 
@@ -149,7 +174,7 @@
 
 \section{The elemental roots}
     \begin{definition}
-        Elemental root $\varphi_s$ of the fundamental sequence is such a whorl argument that there are $N$ smooth periodic functions 
+        Elemental root $\varphi_s$ of the fundamental sequence is such a whorl $s$ that there are $N$ smooth periodic functions 
         $$ 
             \big\{f_k(t): \mathbb \mathbb R \rightarrow \cmz\big\}_{k=1}^N 
         ,$$ called \blue{petals}, such that $$
@@ -163,6 +188,12 @@
         .$$
         The minimal number of petals $N$ needed to justify the criteria above is called its \blue{merosity}.  	
     \end{definition}
+    \begin{theorem}
+        Any elemental root is an element of the brim.
+    \end{theorem}
+    \begin{proof}
+        This is obvious.
+    \end{proof}
 
     \begin{theorem}
         For a fancy frond and a sleek torsion the angle $$
