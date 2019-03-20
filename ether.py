@@ -1,4 +1,4 @@
-from ethercalc import compute
+# from ethercalc import compute
 from matplotlib.pyplot import *
 from numpy import *
 from random import random as rnd
@@ -23,14 +23,14 @@ axSrMbutt = axes([0.05, 0.025, 0.15, 0.04])
 axSpi = axes([0.05, 0.135, 0.15, 0.06])
 # SrMtxt = txt.Text(text = '1.0')
 
-slS =  Slider(axS, 'S', -pi, pi, valinit=pi/2)
-slM =  Slider(axM, 'M', -4, 4, valinit=1)
-slC =  Slider(axC, 'C', 0., 1, valinit=.5)
-slF =  Slider(axF, 'F', 0, pi, valinit=pi/3)
+slS =  Slider(axS, r'$\varphi$', -pi, pi, valinit=pi/2)
+slM =  Slider(axM, r'$\mu$', -4, 4, valinit=1)
+slC =  Slider(axC, r'$\rho_t$', 0., 1, valinit=.5)
+slF =  Slider(axF, r'$\varphi_t$', 0, pi, valinit=pi/3)
 slN =  Slider(axN, 'N', 0., 5, valinit=3.)
-tbSrM = TextBox(axSrM, 'S/M')
+tbSrM = TextBox(axSrM, r'$\varphi/\mu$')
 bSrM = Button(axSrMbutt, 'inverse')
-tbSpi = TextBox(axSpi, 'pi/S')
+tbSpi = TextBox(axSpi, r'$\pi/\varphi$')
 SrMset = False
 SrMinv = False
 
@@ -44,17 +44,19 @@ def draw():
     x = cos(argS)*(1+z)
     y = (1-z)*sin(argS)
     S = x*cos(F)-y*sin(F) + 1j*(y*cos(F)+x*sin(F))
-    # rN =range(N)
-    # a = zeros((N,),dtype = complex)
-    # an = 1
-    # mabs = 1
-    # for n in rN:
-    #     a[n] = an
-    #     if abs(an)> mabs:
-    #         mabs = abs(an)
-    #     an = an *(S + C*sin(n*M))
-    a, mabs = compute.fundamental(S, C, M, N)
-    # print(a[0])
+    try: 
+        from ethercalc import compute
+        a, mabs = compute.fundamental(S, C, M, N)
+    except:
+        rN =range(N)
+        a = zeros((N,),dtype = complex)
+        an = 1
+        mabs = 1
+        for n in rN:
+            a[n] = an
+            if abs(an)> mabs:
+                mabs = abs(an)
+            an = an *(S + C*sin(n*M))
     l.set_data(a.real/mabs, a.imag/mabs)
     ax.set_title('scale: {:<.2e}'.format(mabs) )
     ax.axis('scaled')
@@ -118,13 +120,13 @@ def inverse_rel(val):
     tbSrM.text_disp.set_visible(False)
     initial = tbSrM.text
     if(not SrMinv):
-        tbSrM.__init__(axSrM, 'S/M', initial = initial)
+        tbSrM.__init__(axSrM, r'$\varphi/\mu$', initial = initial)
         tbSrM.on_submit(update_txt)
         slS.disconnect(0)
         slS.cnt = 0
         slS.on_changed(update)
     else:
-        tbSrM.__init__(axSrM, 'M/S', initial = initial)
+        tbSrM.__init__(axSrM, r'$\mu/\varphi$', initial = initial)
         tbSrM.on_submit(update_txt)
         slM.disconnect(0)
         slM.cnt = 0
@@ -151,5 +153,4 @@ slF.on_changed(update_n)
 tbSrM.on_submit(update_txt)
 tbSpi.on_submit(update_spi)
 show()
-
 
