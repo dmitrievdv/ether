@@ -127,14 +127,14 @@
              \; \left|\sum_{n=M}^{M+N}\ln\rho_{ r_n} \right| < 2l
         .\ee 
         Since the torsion is sleek, one can always choose arbitrarily large $N$ and yet $N\mu/pi$ close enough to an integer that \be\label{eq:appint}
-            \sum_{n=M}^{M+N}\ln\rho_{ r_n} = \sum_{n=M}^{M+N}\ln|s + 2t \sin\mu| = \int_0^{2\pi} \ln |s + 2t \sin\mu| d\mu + \frac{2\pi\xi\delta(s,t)}N  = I +  \frac{2\pi\xi\delta(s,t)}N,
-        \ee where $0 \le \mu_n = \mu n - 2\pi k < 2 \pi,\, -1\le\xi\le1 $ and  $$
+            \sum_{n=M}^{M+N}\ln\rho_{ r_n} = \sum_{n=M}^{M+N}\ln|s + 2t \sin\mu_n| = \int_0^{2\pi} \ln |s + 2t \sin\mu| d\mu + \frac{2\pi\xi\delta(s,t)}N  = I + R,
+        \ee where $0 \le \mu_n = \mu n - 2\pi k < 2 \pi$, $I$ is the integral and $R$ is the residue, where  $-1\le\xi\le1 $ and  $$
             \delta(s,t)= \max_{\mu}\left| \frac{\df{\rho_{ r_1}}}{\df{\mu}} \right|,
         $$  because ${\rho_{ r_1}}$ is a smooth function of $\mu$.
-        The equation (\ref{eq:appint}) written with $M=k*N$ for $k<L$ implies $$
+        The equation (\ref{eq:appint}) written with $M=kN$ for $k<L$ implies $$
             2l>\left|\sum_{n=N}^{LN}\ln\rho_{ r_n}\right| >\left|\frac L 2 I \right|,
         $$
-        because one can always keep the relation $L/N$ smaller than $I$ for arbitrarily chosen $L$.   
+        because one can always keep the relation $LR$ smaller than $I$ for arbitrarily chosen $L$ getting larger and larger $N$.   
         This implies that $ \exists l>0:\; \forall L\; |I|<4l/L$ and hence $$
             0 = I = \int_0^{2\pi} \ln (\rho_{r_1}) d\mu 
         .$$
