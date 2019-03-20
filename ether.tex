@@ -32,6 +32,7 @@
 
 \theoremstyle{plain}
 \newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}[section]
 
@@ -49,96 +50,127 @@
 
 
 \section{Notation}
-A complex number $c \in \cmz $ can be expressed it as $$
-  c = x_c + iy_c = \rho_c e^{i\varphi_c}, \qquad x,y,\rho,\varphi \in \mathbb R, \; \rho > 0, \; 0 \le \varphi < 2\pi
-$$
+    A complex number $c \in \cmz $ can be expressed it as $$
+      c = x_c + iy_c = \rho_c e^{i\varphi_c}, \qquad x,y,\rho,\varphi \in \mathbb R, \; \rho > 0, \; 0 \le \varphi < 2\pi
+    $$
 \section{The fundamental sequence}
 
-\begin{definition}
-We call the \red{fundamental} sequence  $a_n$ of the \blue{whorl} $s \in \cmz$,  \blue{frond} $t \in \cmz$ and \blue{torsion} $\mu \in \mathbb R$ such a sequence that $a_0=1$ and $a_n = a_{n-1}r_n$ for $n\in \mathbb N$, where the series of factors $r_n = s + 2t \sin (\mu n)$ is called the \blue{T-series}.   
-\end{definition}
+    \begin{definition}
+        We call the \red{fundamental} sequence  $a_n$ of the \blue{whorl} $s \in \cmz$,  \blue{frond} $t \in \cmz$ and \blue{torsion} $\mu \in \mathbb R$ such a sequence that $a_0=1$ and $a_n = a_{n-1}r_n$ for $n\in \mathbb N$, where the series of factors $r_n = s + 2t \sin (\mu n)$ is called the \blue{T-series}.   
+    \end{definition}
 
-\begin{definition}
-The torsion is called a \red{jerk torsion} if $\mu \in \pir$. Otherwise, in case of $\pi$-irrational torsion $\mu \in \pirr$, it is called a \blue{sleek torsion}. 
-\end{definition} 
+    \begin{definition}
+        The torsion is called a \red{jerk torsion} if $\mu \in \pir$. Otherwise, in case of $\pi$-irrational torsion $\mu \in \pirr$, it is called a \blue{sleek torsion}. 
+    \end{definition} 
 
-\begin{definition}
-The frond is classified by its absolute value, it can be either \blue{cramped} ($0< \rho_t<1$), \blue{unit} ($\rho_t=1$) or \blue{fancy} ($\rho_t>1$).
-\end{definition} 
+    \begin{definition}
+        The frond is classified by its absolute value, it can be either \blue{cramped} ($0< \rho_t<1$), \blue{unit} ($\rho_t=1$) or \blue{fancy} ($\rho_t>1$).
+    \end{definition} 
 
-\begin{definition}\label{def:brim}
-A \blue{brim} set $B(t)$ for fixed frond $t$ is such a set of whorls that $$
-s \in B(t) \Leftrightarrow \exists \limsup_{n \to \infty}(\rho_{a_n})>\liminf_{n \to \infty}(\rho_{a_n})>0
-.$$  
-\end{definition} 
+    \begin{definition}\label{def:brim}
+        A \blue{brim} set $B(t)$ for fixed frond $t$ is such a set of whorls that $$
+            s \in B(t) \Leftrightarrow \exists \limsup_{n \to \infty}(\rho_{a_n})>\liminf_{n \to \infty}(\rho_{a_n})>0
+        .$$  
+    \end{definition} 
 
-\begin{theorem}
-If the jerk torsion $\mu = \frac{2\pi M}{N}$ for some integers $M \in \mathbb Z$ and $N \in \mathbb N$ then the brim consists of roots of the polynomial$$
-\prod_{n=1}^{N} \rho_{r_n} - 1
-$$
-% , or in other words
-% $$s \in B(t) \Leftrightarrow  
-% \sum_{n=1}^{N} \ln (\rho_{r_n}) = 0$$
-\end{theorem}
-\begin{proof}
-This is obvious.%, e.g. see the next theorem (Th. \ref{th:intbrim}).
-\end{proof}
+    \begin{theorem}
+        If the jerk torsion $\mu = \frac{2\pi M}{N}$ for some integers $M \in \mathbb Z$ and $N \in \mathbb N$ then the brim consists of roots of the polynomial$$
+            1 - \prod_{n=1}^{N} \rho_{r_n}      
+        $$
+        % , or in other words
+        % $$s \in B(t) \Leftrightarrow  
+        % \sum_{n=1}^{N} \ln (\rho_{r_n}) = 0$$
+    \end{theorem}
+    \begin{proof}
+        This is obvious.%, e.g. see the next theorem (Theorem~\ref{th:intbrim}).
+    \end{proof}
 
-\begin{theorem}\label{th:intbrim}
-In case of a sleek torsion
-$$s \in B(t) \Leftrightarrow 
-\int_0^{2\pi} \ln (\rho_{r_1}) d\mu = 0 .$$
-\end{theorem}
-\begin{proof}
-The condition for $s$ to be in the brim (Def. \ref{def:brim}) can be written as \be\label{eq:brim}
-s \in B(t) \Leftrightarrow \exists  l>0 \in \mathbb R : \forall N \in \mathbb N : e^{-l}<\rho_{ a_N}  < e^l
-.\ee
-Taking logarithm of the last inequality one gets $$
-l>\left|\ln\rho_{ a_N}  \right|. $$
-Applying the fact, that an element of the fundamental sequence is generally a partial product of the T-series $\rho_{ a_N} =  \left|a_N \right|  = \left| \prod_{n=1}^{N} r_n \right| =\prod_{n=1}^{N}\left| r_n \right| =\prod_{n=1}^{N}\rho_{ r_N} $, it gets rewritten as $$
-l>\left|\ln\prod_{n=1}^{N} \rho_{ r_N} \right| =  \left|\sum_{n=1}^{N}\ln\rho_{ r_n} \right|.$$
-Using the latter expression in (\ref{eq:brim}), one can obtain that \be\label{eq:dis}
- \exists  l>0 \in \mathbb R : \forall N,M \in \mathbb N : \left|\sum_{n=M}^{M+N}\ln\rho_{ r_n} \right| < 2l.\ee
-Since $ \rho_{r_1} = |s + 2t \sin\mu|$ is a continuous function of $\mu$  and the torsion is $\pi$-irrational, \red{this somehow means that} (\ref{eq:dis}) is equivalent to $$
-0 =\int_0^{2\pi} \ln (\rho_{r_1}) d\mu = \int_0^{2\pi} \frac12 \ln\left((x_s+ 2x_t \sin\mu)^2+(y_s + 2y_t \sin\mu)^2\right)d\mu 
-.$$
-\end{proof}
+    \begin{theorem}\label{th:intbrim}
+        In case of a sleek torsion $$
+            s \in B(t) \Leftrightarrow 
+            \int_0^{2\pi} \ln (\rho_{r_1}) d\mu = 0 
+        .$$
+    \end{theorem}
+    \begin{proof}
+        The condition for $s$ to be in the brim (Def. \ref{def:brim}) can be written as 
+        \be\label{eq:brim}
+            s \in B(t) \Leftrightarrow \exists  l>0 
+            %\in \mathbb R 
+            :\; \forall N 
+            %\in \mathbb N 
+            \; e^{-l}<\rho_{ a_N}  < e^l
+        .\ee 
+        Taking logarithm of the last inequality one gets $$
+            l>\left|\ln\rho_{ a_N}  \right|. 
+        $$ Applying the fact, that an element of the fundamental sequence is generally a partial product of the T-series $\rho_{ a_N} =  \left|a_N \right|  = \left| \prod_{n=1}^{N} r_n \right| =\prod_{n=1}^{N}\left| r_n \right| =\prod_{n=1}^{N}\rho_{ r_N} $, it gets rewritten as $$
+            l>\left|\ln\prod_{n=1}^{N} \rho_{ r_N} \right| =  \left|\sum_{n=1}^{N}\ln\rho_{ r_n} \right|
+        .$$ Using the latter expression in (\ref{eq:brim}), one can obtain that 
+        \be\label{eq:dis}
+             \exists  l>0  %\in \mathbb R 
+             :\; \forall N,M %\in \mathbb N 
+             \; \left|\sum_{n=M}^{M+N}\ln\rho_{ r_n} \right| < 2l
+        .\ee
+        Since $ \rho_{r_1} = |s + 2t \sin\mu|$ is a continuous function of $\mu$  and the torsion is $\pi$-irrational, \red{this somehow means that} (\ref{eq:dis}) is equivalent to $$
+            0 =\int_0^{2\pi} \ln (\rho_{r_1}) d\mu = \int_0^{2\pi} \frac12 \ln\left((x_s+ 2x_t \sin\mu)^2+(y_s + 2y_t \sin\mu)^2\right)d\mu 
+        .$$
+    \end{proof}
 
-\begin{theorem}
-For a fancy frond the brim is always empty and vice versa:
-$$\rho_t>1 \Leftrightarrow B(t) = \emptyset.$$
-\end{theorem}
-\begin{proof}
-\red{Needs to be written.}
-\end{proof}
+    \begin{theorem}
+        For a fancy frond the brim is always empty and vice versa: $$
+            \rho_t>1 \Leftrightarrow B(t) = \emptyset
+        .$$
+    \end{theorem}
+    \begin{proof}
+        \red{Needs to be written.}
+    \end{proof}
 
-\begin{theorem}
-For a cramped frond and a sleek torsion, the brim is represented by an ellipse on the complex plain with foci at $\pm t$ (the center at $0$) and semi-axes of $1\pm\rho_t^2$ (eccentricity is thus $2\rho_t/(1+\rho_t^2)$), namely:
-% $$s \in B(t) \Leftrightarrow \left(\frac{x_t x_s +y_t y_s }{\rho_t(1+\rho_t^2)}\right)^2 + \left(\frac{x_t y_s  - x_s  y_t}{\rho_t(1-\rho_t^2)}\right)^2 = 1 ,$$
-% or
-$$s \in B(t) \Leftrightarrow \left(\frac{\rho_s\cos(\varphi_s-\varphi_t)}{1+\rho_t^2}\right)^2 + \left(\frac{\rho_s\sin(\varphi_s-\varphi_t)}{1-\rho_t^2}\right)^2 = 1 .$$
-\end{theorem}
-\begin{proof}
-\red{No idea.}
-\end{proof}
+    \begin{theorem}
+        For a cramped frond and a sleek torsion, the brim is represented by an ellipse on the complex plain with foci at $\pm t$ (the center at $0$) and semi-axes of $1\pm\rho_t^2$ (eccentricity is thus $2\rho_t/(1+\rho_t^2)$), namely:
+        % $$s \in B(t) \Leftrightarrow \left(\frac{x_t x_s +y_t y_s }{\rho_t(1+\rho_t^2)}\right)^2 + \left(\frac{x_t y_s  - x_s  y_t}{\rho_t(1-\rho_t^2)}\right)^2 = 1 ,$$
+        % or
+        $$
+            s \in B(t) \Leftrightarrow \left(\frac{\rho_s\cos(\varphi_s-\varphi_t)}{1+\rho_t^2}\right)^2 + \left(\frac{\rho_s\sin(\varphi_s-\varphi_t)}{1-\rho_t^2}\right)^2 = 1 
+        .$$
+    \end{theorem}
+    \begin{proof}
+        \red{No idea.}
+    \end{proof}
+
+    \begin{corollary}
+        $$
+            \int_0^{2\pi} \ln\left(\left(\sin\theta+\frac{5x}4\right)^2+\frac{9y^2}{16}\right)d\theta = 0  
+        $$ is an equation for unit circle $x^2+y^2=1$.
+
+    \end{corollary}
+
+    \begin{proof}
+        This becomes clear if one combines the result of this theorem with Theorem~\ref{th:intbrim} for a frond $t=1/2$.  
+    \end{proof}
 
 \section{The elemental roots}
-\begin{definition}
-Elemental root $\varphi_s$ of the fundamental sequence is such a whorl argument that there are $N$ smooth periodic functions 
-$$ \big\{f_k(t): \mathbb \mathbb R \rightarrow \cmz\big\}_{k=1}^N 
-,$$ called \blue{petals}, such that $$
-\forall n \in \mathbb N: \exists k\le N \in \mathbb N,\,w \in \mathbb R: a_n = f_k(w) 
-$$ and $$
-\forall w \in \mathbb R,\,k\le N \in \mathbb N,\, \forall \varepsilon >0  \in \mathbb R : \exists n \in \mathbb N: |a_n - f_k(w)|<\varepsilon
-.$$
-The minimal number of petals $N$ needed to justify the criteria above is called its \blue{merosity}.  	
-\end{definition}
+    \begin{definition}
+        Elemental root $\varphi_s$ of the fundamental sequence is such a whorl argument that there are $N$ smooth periodic functions 
+        $$ 
+            \big\{f_k(t): \mathbb \mathbb R \rightarrow \cmz\big\}_{k=1}^N 
+        ,$$ called \blue{petals}, such that $$
+            \forall n %\in \mathbb N 
+            \; \exists k\le N %\in \mathbb N
+            ,\,w %\in \mathbb R
+            :\; a_n = f_k(w) 
+        $$ and $$
+            \forall w,\,\varepsilon >0,\,k\le N \; \exists n :\; |a_n - f_k(w)|<\varepsilon
+            %\in \mathbb R,\,k\le N \in \mathbb N,\, \forall \varepsilon >0  \in \mathbb R \; \exists n \in \mathbb N: |a_n - f_k(w)|<\varepsilon
+        .$$
+        The minimal number of petals $N$ needed to justify the criteria above is called its \blue{merosity}.  	
+    \end{definition}
 
-\begin{theorem}
-For a fancy frond and a sleek torsion $$\varphi_s = \frac{2\pi M}N, \qquad M \in \mathbb Z,\, N \in\mathbb N $$ is an elemental root of merosity $N$ if $\gcd(M,N)=1$.
-\end{theorem}
-\begin{proof}
-\red{Needs to be written.}
-\end{proof}
+    \begin{theorem}
+        For a fancy frond and a sleek torsion the angle $$
+            \varphi_s = \frac{2\pi M}N, \qquad M \in \mathbb Z,\, N \in\mathbb N 
+        $$ will be an elemental root of merosity $N$ if $\gcd(M,N)=1$.
+    \end{theorem}
+    \begin{proof}
+        \red{Needs to be written.}
+    \end{proof}
 
 \end{document}
