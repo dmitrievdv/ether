@@ -1,3 +1,4 @@
+from ethercalc import frill
 from matplotlib.pyplot import *
 from numpy import *
 from random import random as rnd
@@ -24,25 +25,28 @@ slN =  Slider(axN, 'N', 1., 3, valinit=2)
 
 def draw(N,aC,rC):
 
-    sx = rC*cos(aC)
-    sy = rC*sin(aC)
+    x_f, y_f, n_xy = frill.compute(N, aC, rC) 
+    # print(frill.compute.__doc__)
+    x = x_f[:n_xy-1]; y = y_f[:n_xy-1]
+    # sx = rC*cos(aC)
+    # sy = rC*sin(aC)
 
-    x = []
-    y = []
+    # x = []
+    # y = []
 
-    for k in range(N):
-        rho = k/N
-        sa = 1+rho*rho
-        sb = 1-rho*rho
-        sc = sqrt(sa*sa-sb*sb)
-        dif = 10
-        pha = 0
-        for j in range(N):
-            phi = j*2*pi/N
-            sa2 = sqrt((sc*cos(phi) - sx)**2 + (sc*sin(phi) - sy)**2)  + sqrt((sc*cos(phi) + sx)**2 + (sc*sin(phi) + sy)**2)
-            if abs(sa2-2*sa)<1/4/N:
-                x.append(rho*cos(phi))
-                y.append(rho*sin(phi))
+    # for k in range(N):
+    #     rho = k/N
+    #     sa = 1+rho*rho
+    #     sb = 1-rho*rho
+    #     sc = sqrt(sa*sa-sb*sb)
+    #     dif = 10
+    #     pha = 0
+    #     for j in range(N):
+    #         phi = j*2*pi/N
+    #         sa2 = sqrt((sc*cos(phi) - sx)**2 + (sc*sin(phi) - sy)**2)  + sqrt((sc*cos(phi) + sx)**2 + (sc*sin(phi) + sy)**2)
+    #         if abs(sa2-2*sa)<1/4/N:
+    #             x.append(rho*cos(phi))
+    #             y.append(rho*sin(phi))
 
     ll.set_data(x,y)
     fig.canvas.draw_idle()
