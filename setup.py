@@ -1,7 +1,7 @@
 from numpy.distutils.core import Extension
 
-ext = Extension(name = 'ethercalc', sources = ['fsrc/frill.f90'],
-	 f2py_options = ['only:','compute', ':'])
+ext = Extension(name = 'ethercalc', sources = ['fsrc/compute.f90'],
+	 f2py_options = ['only:','frill', 'fundamental', ':'])
 
 if __name__ == '__main__':
 	from numpy.distutils.core import setup

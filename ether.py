@@ -1,3 +1,4 @@
+from ethercalc import compute
 from matplotlib.pyplot import *
 from numpy import *
 from random import random as rnd
@@ -43,15 +44,17 @@ def draw():
     x = cos(argS)*(1+z)
     y = (1-z)*sin(argS)
     S = x*cos(F)-y*sin(F) + 1j*(y*cos(F)+x*sin(F))
-    rN =range(N)
-    a = zeros((N,),dtype = complex)
-    an = 1
-    mabs = 1
-    for n in rN:
-        a[n] = an
-        if abs(an)> mabs:
-            mabs = abs(an)
-        an = an *(S + C*sin(n*M))
+    # rN =range(N)
+    # a = zeros((N,),dtype = complex)
+    # an = 1
+    # mabs = 1
+    # for n in rN:
+    #     a[n] = an
+    #     if abs(an)> mabs:
+    #         mabs = abs(an)
+    #     an = an *(S + C*sin(n*M))
+    a, mabs = compute.fundamental(S, C, M, N)
+    # print(a[0])
     l.set_data(a.real/mabs, a.imag/mabs)
     ax.set_title('scale: {:<.2e}'.format(mabs) )
     ax.axis('scaled')

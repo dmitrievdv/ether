@@ -1,4 +1,4 @@
-from ethercalc import frill
+from ethercalc import compute
 from matplotlib.pyplot import *
 from numpy import *
 from random import random as rnd
@@ -25,7 +25,7 @@ slN =  Slider(axN, 'N', 1., 3, valinit=2)
 
 def draw(N,aC,rC):
 
-    x_f, y_f, n_xy = frill.compute(N, aC, rC) 
+    x_f, y_f, n_xy = compute.frill(N, aC, rC) 
     # print(frill.compute.__doc__)
     x = x_f[:n_xy-1]; y = y_f[:n_xy-1]
     # sx = rC*cos(aC)
