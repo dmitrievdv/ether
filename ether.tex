@@ -11,7 +11,7 @@
 % \usepackage{amssymb}
 % % \usepackage{epsfig}
 % \usepackage{graphics}
-% \usepackage{amsmath}
+\usepackage{amsmath}
 % \usepackage{natbib}
 % \usepackage{hyperref}
 % \usepackage{float}
@@ -91,7 +91,7 @@
 
     \begin{theorem}
         If the shaggy torsion is such that
-        $\mu N = 2\pi M$ for some integers $M \in \mathbb Z,\, N \in \mathbb N$ and  $\gcd(M,N)=1$, then the brim and the frill each consist of roots all of the polynomials$$
+        $\mu N = 2\pi M$ for some integers $M \in \mathbb Z,\, N \in \mathbb N$ and  $\gcd(M,N)=1$, then the brim and the frill each consist of roots  of the polynomials$$
             P_k(s,t) = 1 - \prod_{n=1}^{kN} \rho_{r_n}, \qquad k \in \mathbb N      
         $$ with a corresponding variable fixed. 
         % , or in other words
@@ -177,18 +177,18 @@
     \begin{definition}
         Elemental root $\varphi_s$ of the fundamental sequence is such a whorl $s$ that there are $N$ smooth periodic functions 
         $$ 
-            \big\{f_k(t): \mathbb \mathbb R \rightarrow \cmz\big\}_{k=1}^N 
+            \big\{f_k(w): \mathbb \mathbb R \rightarrow \cmz\big\}_{k=1}^N 
         ,$$ called \blue{petals}, such that $$
             \forall n %\in \mathbb N 
-            \; \exists k\le N %\in \mathbb N
+            \; \exists k %\le N %\in \mathbb N
             ,\,w %\in \mathbb R
             :\; a_n = f_k(w) 
         $$ and $$
-            \forall w,\,\varepsilon >0,\,k\le N \; \exists n :\; |a_n - f_k(w)|<\varepsilon
+            \forall w,\,k\le N\; \frac{\df{f_k(w)}}{\df{w}}\ne 0 \text{ and } \forall \;\varepsilon >0, \exists n :\; |a_n - f_k(w)|<\varepsilon
             %\in \mathbb R,\,k\le N \in \mathbb N,\, \forall \varepsilon >0  \in \mathbb R \; \exists n \in \mathbb N: |a_n - f_k(w)|<\varepsilon
         .$$
         The minimal number of petals $N$ needed to justify the criteria above is called its \blue{merosity}.  	
-    \end{definition}
+    \end{definition} 
     The definition above is shit
     \begin{theorem}
         Any elemental root is an element of the brim.
