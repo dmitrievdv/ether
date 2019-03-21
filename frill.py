@@ -20,7 +20,7 @@ axN = axes([0.25, 0.03, 0.65, 0.03], facecolor='green')
 
 slaC =  Slider(axaC, r'$\varphi_s$', -pi, pi, valinit=0)
 slrC =  Slider(axrC, r'$\rho_s$', 0, 2, valinit=1)
-slN =  Slider(axN, 'N', 1., 3, valinit=2)
+slN =  Slider(axN, 'N', 1., 5, valinit=2)
 
 def draw(N,aC,rC):         
 

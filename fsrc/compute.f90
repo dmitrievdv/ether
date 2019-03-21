@@ -10,7 +10,7 @@ contains
       real(8) :: aC, rC
       integer :: N
       integer, intent(out) :: n_xy
-      real(8), dimension(N*N), intent(out) :: x_full, y_full
+      real(8), dimension(4*N), intent(out) :: x_full, y_full
 
       real(8) :: rho, sa, sb, sc, sx, sy
       real(8) :: dif, pha, sa2, phi
@@ -42,7 +42,7 @@ contains
         ! write(*,*) sum(val(:3))/4
         ! P = poly1d([1,0,p,q,r])
         do k=0,3
-          if(abs(rootsi(k))==0 .and. (0<= rootsr(k) .and. rootsr(k)<=1)) then
+          if(abs(rootsi(k))<1d-14 .and. (1d-14<= rootsr(k) .and. rootsr(k)<=1d0)) then
             rho = sqrt(rootsr(k))
             n_xy = n_xy + 1
             x_full(n_xy) = rho*cos(aC+phi)
