@@ -1,4 +1,5 @@
 module compute
+  use fbauhube
   implicit none
 
   real(8), parameter :: pi = acos(-1d0)
@@ -13,7 +14,11 @@ contains
 
       real(8) :: rho, sa, sb, sc, sx, sy
       real(8) :: dif, pha, sa2, phi
-      integer :: k,j
+      real(8) :: r, q, p
+      real(8), dimension(0:NMAX) :: ai,ar
+      real(8), dimension(0:NMAX) :: rootsi, rootsr, val 
+      real(8) :: t1, t2
+      integer :: k,j,lol
 
       ! write(*,*) rC, aC
 
@@ -23,25 +28,31 @@ contains
       x_full = 0d0; y_full = 0d0
       n_xy = 0
 
-      do k=1,N
-        rho = k*1d0/N
-        sa = 1d0+rho*rho
-        sb = 1d0-rho*rho
-        sc = sqrt(sa*sa-sb*sb)
-        dif = 10d0
-        pha = 0d0
-        do j=1,N
-          phi = j*2d0*pi/N
-          sa2 = sqrt((sc*cos(phi) - sx)**2 + (sc*sin(phi) - sy)**2)  + sqrt((sc*cos(phi) + sx)**2 + (sc*sin(phi) + sy)**2)
-          if(abs(sa2-2d0*sa)<1d0/4d0/N) then
+      do j=1,N
+        sy = rC*(j*2d0/N-1d0+1d0/N)
+        sx = sqrt(rC*rC-sy*sy)
+        phi = asin(j*2d0/N-1d0+1d0/N)
+        r = 1d0 - rC*rC
+        q = 2d0*sx*sx- 2d0*sy*sy
+        p = r-3d0
+        ! ar = [1d0, 0d0, p, q, r]
+        ar(:4) = [r, q, p, 0d0, 1d0]
+        ai = 0d0
+        lol = bauhub (0, 0, 4, ar, ai, rootsr, rootsi, val)
+        ! write(*,*) sum(val(:3))/4
+        ! P = poly1d([1,0,p,q,r])
+        do k=0,3
+          if(abs(rootsi(k))==0 .and. (0<= rootsr(k) .and. rootsr(k)<=1)) then
+            rho = sqrt(rootsr(k))
             n_xy = n_xy + 1
-            x_full(n_xy) = rho*cos(phi)
-            y_full(n_xy) = rho*sin(phi)
+            x_full(n_xy) = rho*cos(aC+phi)
+            y_full(n_xy) = rho*sin(aC+phi)
+            n_xy = n_xy + 1
+            x_full(n_xy) = -rho*cos(aC+phi)
+            y_full(n_xy) = -rho*sin(aC+phi)
           endif
         enddo
       enddo
-
-      ! write(*,*) n_xy, x_full(:n_xy)
 
   end subroutine frill
 
