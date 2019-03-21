@@ -91,7 +91,7 @@
 
     \begin{theorem}
         If the shaggy torsion is such that
-        $\mu N = 2\pi M$ for some integers $M \in \mathbb Z,\, N \in \mathbb N$ and  $\gcd(M,N)=1$, then the brim and the frill each consist of roots  of the polynomials$$
+        $\mu N = 2\pi M$ for some integers $M \in \mathbb Z,\, N \in \mathbb N$ and  $\gcd(M,N)=1$, then the brim and the frill each consist of roots of the polynomials$$
             P_k(s,t) = 1 - \prod_{n=1}^{kN} \rho_{r_n}, \qquad k \in \mathbb N      
         $$ with a corresponding variable fixed. 
         % , or in other words
@@ -154,9 +154,9 @@
         For a cramped frond and a sleek torsion, the brim is represented by an ellipse on the complex plain with foci at $\pm t$ (the center at $0$) and semi-axes of $1\pm\rho_t^2$ (eccentricity is thus $2\rho_t/(1+\rho_t^2)$), namely:
         % $$s \in B(t) \Leftrightarrow \left(\frac{x_t x_s +y_t y_s }{\rho_t(1+\rho_t^2)}\right)^2 + \left(\frac{x_t y_s  - x_s  y_t}{\rho_t(1-\rho_t^2)}\right)^2 = 1 ,$$
         % or
-        $$
+        \be\label{eq:brimellipse}
             s \in B(t) \Leftrightarrow \left(\frac{\rho_s\cos(\varphi_s-\varphi_t)}{1+\rho_t^2}\right)^2 + \left(\frac{\rho_s\sin(\varphi_s-\varphi_t)}{1-\rho_t^2}\right)^2 = 1 
-        .$$
+        .\ee
     \end{theorem}
     \begin{proof}
         \red{No idea.}
@@ -172,6 +172,18 @@
     \begin{proof}
         This becomes clear if one combines the result of this theorem with Theorem~\ref{th:intbrim} for a frond $t=1/2$.  
     \end{proof}
+    \begin{corollary}
+        For a sleek torsion a cramped frond $t$ is in the frill of a whorl $s$ if and only if 
+        $$
+            \cos^2(\varphi_s-\varphi_t) = \frac{(2 + \rho_s^2)\rho_t^4 - \rho_t^8 + 2\rho_s^2\rho_t^2 + \rho_s^2 - 1}{4\rho_s^2\rho_t^2}
+            % \rho_t^8 - (2 + \rho_s^2)\rho_t^4 + (4\cos^2(\varphi_s-\varphi_t)-2)\rho_s^2\rho_t^2 - \rho_s^2 + 1 = 0 
+        .$$
+    \end{corollary}
+
+    \begin{proof}
+        This is just another for of the equation (\ref{eq:brimellipse}).  
+    \end{proof}
+
 
 \section{The elemental roots}
     \begin{definition}
@@ -184,7 +196,7 @@
             ,\,w %\in \mathbb R
             :\; a_n = f_k(w) 
         $$ and $$
-            \forall w,\,k\le N\; \frac{\df{f_k(w)}}{\df{w}}\ne 0 \text{ and } \forall \;\varepsilon >0, \exists n :\; |a_n - f_k(w)|<\varepsilon
+            \forall w,\,k\; \frac{\df{f_k(w)}}{\df{w}}\ne 0 \text{ and } \forall \;\varepsilon >0, \exists n :\; |a_n - f_k(w)|<\varepsilon
             %\in \mathbb R,\,k\le N \in \mathbb N,\, \forall \varepsilon >0  \in \mathbb R \; \exists n \in \mathbb N: |a_n - f_k(w)|<\varepsilon
         .$$
         The minimal number of petals $N$ needed to justify the criteria above is called its \blue{merosity}.  	

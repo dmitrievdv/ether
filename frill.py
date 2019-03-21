@@ -25,6 +25,7 @@ slN =  Slider(axN, 'N', 1., 5, valinit=2)
 def draw(N,aC,rC):         
 
     try:
+        e = 1/0 # raise an error, hehe >:D
         from ethercalc import compute
         x_f, y_f, n_xy = compute.frill(N, aC, rC) 
         # print(frill.compute.__doc__)
@@ -32,21 +33,26 @@ def draw(N,aC,rC):
     except:
         x =[]
         y =[]
-        for j in range(N):
-            sy = rC*(j*2/N-1+1/N)
-            sx = sqrt(rC*rC-sy*sy)
-            phi = arcsin(j*2/N-1+1/N)
-            r = 1 - rC*rC
-            q = 2*sx*sx- 2*sy*sy
-            p = r-3
-            P = poly1d([1,0,p,q,r])
-            for c in P.r:
-                if abs(c.imag)==0 and 0<=c.real<=1:
-                    rho = sqrt(c.real)
-                    x.append(rho*cos(aC+phi))
-                    y.append(rho*sin(aC+phi))
-                    x.append(-rho*cos(aC+phi))
-                    y.append(-rho*sin(aC+phi))
+        ca = cos(aC)
+        sa = sin(aC)
+        for j in range(N): 
+            rho = j/N+0.51/N
+            rho2 = rho*rho
+            rs2 = rC*rC
+            c2 = rs2 - 1 + (2 + rs2)*rho2*rho2 - rho2**4
+            c2 = c2/rs2/rho2
+            c = rho*sqrt(c2 + 2)/2
+            s = rho*sqrt(2 - c2)/2
+
+            x.append( ca*c - sa*s)
+            y.append( sa*c + ca*s)
+            x.append( sa*s - ca*c)
+            y.append(-sa*c - ca*s)
+            x.append( ca*c + sa*s)
+            y.append( sa*c - ca*s)
+            x.append(-sa*s - ca*c)
+            y.append( ca*s - sa*c)
+            
 
     ll.set_data(x,y)
     fig.canvas.draw_idle()

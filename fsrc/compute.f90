@@ -29,7 +29,7 @@ contains
       n_xy = 0
 
       do j=1,N
-        sy = rC*(j*2d0/N-1d0+1d0/N)
+        sy = rC*(j*2d0/N-1d0+1.1d0/N)
         sx = sqrt(rC*rC-sy*sy)
         phi = asin(j*2d0/N-1d0+1d0/N)
         r = 1d0 - rC*rC
@@ -42,7 +42,7 @@ contains
         ! write(*,*) sum(val(:3))/4
         ! P = poly1d([1,0,p,q,r])
         do k=0,3
-          if(abs(rootsi(k))<1d-14 .and. (1d-14<= rootsr(k) .and. rootsr(k)<=1d0)) then
+          if(abs(rootsi(k))<1d-30 .and. (1d-14<= rootsr(k) .and. rootsr(k)<=1d0)) then
             rho = sqrt(rootsr(k))
             n_xy = n_xy + 1
             x_full(n_xy) = rho*cos(aC+phi)
