@@ -15,7 +15,7 @@ ax.set_ylim(-1,1)
 
 axaC = axes([0.25, 0.15, 0.65, 0.03], facecolor='gray')
 axrC = axes([0.25, 0.11, 0.65, 0.03], facecolor='grey')
-axN = axes([0.25, 0.06, 0.65, 0.03], facecolor='grey')
+axN = axes([0.25, 0.07, 0.65, 0.03], facecolor='grey')
 axtet = axes([0.25, 0.03, 0.65, 0.03], facecolor='green')
 # SrMtxt = txt.Text-np.pi, np.pi = '1.0')
 
