@@ -38,14 +38,14 @@ def draw(rhot,phit,phis,tetk):
 	# S = x*cos(F)-y*sin(F) + 1j*(y*cos(F)+x*sin(F))
 	f = lambda tet: np.log(S+C*np.sin(tet))
 	# thetk = 8*np.pi
-	n = 10000
+	n = 5000
 	m = 0
-	ints = []
+	ints = np.zeros(n, dtype='complex')
 	thets = np.linspace(0, tetk, n, endpoint = True)
-	for thet in thets:
+	for i,thet in enumerate(thets):
 		m = f(thet)*tetk/n + m
-		ints.append(m)
-	ints = np.exp(np.array(ints))
+		ints[i] = np.exp(m)
+	# ints = np.exp(ints)
 	x = ints.real
 	y = ints.imag
 	ro = np.sqrt(x**2 + y**2)
