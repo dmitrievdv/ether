@@ -21,6 +21,8 @@ axN = axes([0.25, 0.01, 0.65, 0.03], facecolor='green')
 axSrM = axes([0.05, 0.065, 0.15, 0.06])
 axSrMbutt = axes([0.05, 0.025, 0.15, 0.04])
 axSpi = axes([0.05, 0.135, 0.15, 0.06])
+axFpi = axes([0.05, 0.205, 0.15, 0.06])
+axCpi = axes([0.05, 0.275, 0.15, 0.06])
 # SrMtxt = txt.Text(text = '1.0')
 
 slS =  Slider(axS, r'$\varphi$', -pi, pi, valinit=pi/2)
@@ -31,6 +33,8 @@ slN =  Slider(axN, 'N', 0., 5, valinit=3.)
 tbSrM = TextBox(axSrM, r'$\varphi/\mu$')
 bSrM = Button(axSrMbutt, 'inverse')
 tbSpi = TextBox(axSpi, r'$\pi/\varphi$')
+tbFpi = TextBox(axFpi, r'$\pi/\varphi_t$')
+tbCpi = TextBox(axCpi, r'$\rho_t$')
 SrMset = False
 SrMinv = False
 
@@ -140,6 +144,16 @@ def update_spi(val):
     slS.set_val(pi/float(tbSpi.text))
     update(val)
 
+ 
+def update_fpi(val):
+    slF.set_val(pi/float(tbFpi.text))
+    update(val)
+
+ 
+def update_cpi(val):
+    slC.set_val(float(tbCpi.text))
+    update(val)
+
     
 
 # print()
@@ -152,5 +166,7 @@ slC.on_changed(update_n)
 slF.on_changed(update_n)
 tbSrM.on_submit(update_txt)
 tbSpi.on_submit(update_spi)
+tbCpi.on_submit(update_cpi)
+tbFpi.on_submit(update_fpi)
 show()
 
