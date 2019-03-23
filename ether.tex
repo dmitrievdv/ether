@@ -1,17 +1,19 @@
 \documentclass{article}
 
+
+
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
 \usepackage[varg]{txfonts}
+\usepackage{amssymb}
 \usepackage{amsthm}
 \usepackage{color}
 \usepackage{gensymb}
 \usepackage{bm}
 \usepackage{graphicx}
-% \usepackage{amssymb}
 % % \usepackage{epsfig}
 % \usepackage{graphics}
-\usepackage{amsmath}
+% \usepackage{amsmath}
 % \usepackage{natbib}
 % \usepackage{hyperref}
 % \usepackage{float}
@@ -105,7 +107,7 @@
     \begin{theorem}\label{th:intbrim}
         In case of a sleek torsion $$
             s \in B(t) \Leftrightarrow 
-            \int_0^{2\pi} \ln (\rho_{r_1}) d\mu = 0 
+            \int_0^{2\pi} \ln (\rho_{r_1}) df{\mu} = 0 
         .$$
     \end{theorem}
     \begin{proof}
@@ -119,7 +121,9 @@
         .\ee 
         Taking logarithm of the last inequality one gets $$
             l>\left|\ln\rho_{ a_N}  \right|. 
-        $$ Applying the fact, that an element of the fundamental sequence is generally a partial product of the T-series $\rho_{ a_N} =  \left|a_N \right|  = \left| \prod_{n=1}^{N} r_n \right| =\prod_{n=1}^{N}\left| r_n \right| =\prod_{n=1}^{N}\rho_{ r_N} $, it gets rewritten as $$
+        $$ Applying the fact, that an element of the fundamental sequence is generally a partial product of the T-series $$
+        \rho_{ a_N} =  \left|a_N \right|  = \left| \prod_{n=1}^{N} r_n \right| =\prod_{n=1}^{N}\left| r_n \right| =\prod_{n=1}^{N}\rho_{ r_N} 
+        $$, it gets rewritten as $$
             l>\left|\ln\prod_{n=1}^{N} \rho_{ r_N} \right| =  \left|\sum_{n=1}^{N}\ln\rho_{ r_n} \right|
         .$$ Using the latter expression in (\ref{eq:brim}), one can obtain that 
         \be\label{eq:dis}
@@ -128,16 +132,15 @@
              \; \left|\sum_{n=M}^{M+N}\ln\rho_{ r_n} \right| < 2l
         .\ee 
         Since the torsion is sleek, one can always choose arbitrarily large $N$ and yet $N\mu/pi$ close enough to an integer that \be\label{eq:appint}
-            \sum_{n=M}^{M+N}\ln\rho_{ r_n} = \sum_{n=M}^{M+N}\ln|s + 2t \sin\mu_n| = \int_0^{2\pi} \ln |s + 2t \sin\mu| d\mu + \frac{2\pi\xi\delta(s,t)}N  = I + R,
+            \sum_{n=M}^{M+N}\ln\rho_{ r_n} = \sum_{n=M}^{M+N}\ln|s + 2t \sin\mu_n| = \int_0^{2\pi} \ln |s + 2t \sin\mu| df{\mu} + \frac{2\pi\xi\delta(s,t)}N  = I + R,
         \ee where $0 \le \mu_n = \mu n - 2\pi k < 2 \pi$, $I$ is the integral and $R$ is the residue, where  $-1\le\xi\le1 $ and  $$
-            \delta(s,t)= \max_{\mu}\left| \frac{\df{\rho_{ r_1}}}{\df{\mu}} \right|,
+            \delta(s,t)= \max_{\mu}\left| \frac{1}{\rho_{ r_1}}\frac{\df{\rho_{ r_1}}}{\df{\mu}} \right|,
         $$  because ${\rho_{ r_1}}$ is a smooth function of $\mu$.
         The equation (\ref{eq:appint}) written with $M=kN$ for $k<L$ implies $$
             2l>\left|\sum_{n=N}^{LN}\ln\rho_{ r_n}\right| >\left|\frac L 2 I \right|,
-        $$
-        because one can always keep the relation $LR$ smaller than $I$ for arbitrarily chosen $L$ getting larger and larger $N$.   
+        $$ because one can always keep the relation $LR$ smaller than $I$ for arbitrarily chosen $L$ getting larger and larger $N$.   
         This implies that $ \exists l>0:\; \forall L\; |I|<4l/L$ and hence $$
-            0 = I = \int_0^{2\pi} \ln (\rho_{r_1}) d\mu 
+            0 = I = \int_0^{2\pi} \ln (\rho_{r_1}) df{\mu} 
         .$$
     \end{proof}
 
@@ -164,7 +167,7 @@
 
     \begin{corollary}
         $$
-            \int_0^{2\pi} \ln\left(\left(\sin\theta+\frac{5x}4\right)^2+\frac{9y^2}{16}\right)d\theta = 0  
+            \int_0^{2\pi} \ln\left(\left(\sin\theta+\frac{5x}4\right)^2+\frac{9y^2}{16}\right)df{\theta} = 0  
         $$ is an equation for unit circle $x^2+y^2=1$.
 
     \end{corollary}
@@ -187,37 +190,38 @@
 
 \section{The elemental roots}
     \begin{definition}
-        Elemental root $\varphi_s$ of the fundamental sequence is such a whorl $s$ that there are $N$ smooth periodic functions 
-        $$ 
-            \big\{f_k(w): \mathbb \mathbb R \rightarrow \cmz\big\}_{k=1}^N 
-        ,$$ called \blue{petals}, such that $$
-            \forall n %\in \mathbb N 
-            \; \exists k %\le N %\in \mathbb N
-            ,\,w %\in \mathbb R
-            :\; a_n = f_k(w) 
+        The \red{fundamental sequence} is called a flower of \blue{merosity} $N$ if $N$ is a minimal integer such that there is a smooth periodic function onto the complex plain with a non-zero derivative verywhere $$
+            f(w),\,\frac{\df{f(w)}}{\df{w}}:\; \mathbb R \rightarrow \cmz 
+        $$ called a \blue{petal}, such that $$
+            \forall n \; \exists k,\,w:\; a_n  = f(w) e^{i{k}/{N}}
         $$ and $$
-            \forall w,\,k\; \frac{\df{f_k(w)}}{\df{w}}\ne 0 \text{ and } \forall \;\varepsilon >0, \exists n :\; |a_n - f_k(w)|<\varepsilon
-            %\in \mathbb R,\,k\le N \in \mathbb N,\, \forall \varepsilon >0  \in \mathbb R \; \exists n \in \mathbb N: |a_n - f_k(w)|<\varepsilon
+            \forall w,\,k,\,\varepsilon >0 \; \exists n :\; \left| f(w)e^{i{k}/{N}} - a_n  \right|<\varepsilon
         .$$
-        The minimal number of petals $N$ needed to justify the criteria above is called its \blue{merosity}.  	
+        
     \end{definition} 
-    The definition above is shit
-    \begin{theorem}
-        Any elemental root is an element of the brim.
-    \end{theorem}
-    \begin{proof}
-        This is obvious.
-    \end{proof}
+    % \begin{definition}
+    %     Elemental root $\varphi_s$ of the fundamental sequence is such a whorl $s$ that there are $N$ smooth periodic functions 
+    %     $$ 
+    %         \big\{f_k(w): \mathbb \mathbb R \rightarrow \cmz\big\}_{k=1}^N 
+    %     ,$$ called \blue{petals}, such that $$
+    %         \forall n %\in \mathbb N 
+    %         \; \exists k %\le N %\in \mathbb N
+    %         ,\,w %\in \mathbb R
+    %         :\; a_n = f_k(w) 
+    %     $$ and $$
+    %         \forall w,\,k\; \frac{\df{f_k(w)}}{\df{w}}\ne 0 \text{ and } \forall \;\varepsilon >0, \exists n :\; |a_n - f_k(w)|<\varepsilon
+    %         %\in \mathbb R,\,k\le N \in \mathbb N,\, \forall \varepsilon >0  \in \mathbb R \; \exists n \in \mathbb N: |a_n - f_k(w)|<\varepsilon
+    %     .$$
+    %     The minimal number of petals $N$ needed to justify the criteria above is called its \blue{merosity}.  	
+    % \end{definition} 
 
     \begin{theorem}
-        For a fancy frond $t$ and a sleek torsion
-        the following whorl
+        A \red{fundamental sequence} of cramped frond $t$, sleek torsion
+        and the following whorl
         $$
-            s = (1+\rho_t^2)\cos\varphi_t e^{i\chi} + i(1-\rho_t^2)\sin\varphi_t e^{i\chi}
-        $$ will be an elemental root of merosity $N$ if $$
-            \frac{\chi+\varphi_s}{2\pi}N= M\in \mathbb Z
-         % \exists M :\; \gcd(M,N)=1$ and $$
-        % \chi+\varphi_s = \frac{2\pi M}{N}
+            s = \left(1+\rho_t^2\right)e^{i\chi}\cos\varphi_t + i\left(1-\rho_t^2\right) e^{i\chi}\sin\varphi_t 
+        $$ will be a flower of merosity $N$ if $$
+            \frac{\chi+\varphi_t}{2\pi}N= M\in \mathbb Z
         $$ and $  \gcd(M,N)=1$.
     \end{theorem}
     \begin{proof}
