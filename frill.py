@@ -19,7 +19,7 @@ axN = axes([0.25, 0.03, 0.65, 0.03], facecolor='green')
 # SrMtxt = txt.Text(text = '1.0')
 
 slaC =  Slider(axaC, r'$\varphi_s$', -pi, pi, valinit=0)
-slrC =  Slider(axrC, r'$\rho_s$', 0, 2, valinit=1)
+slrC =  Slider(axrC, r'$\rho_s$', 1e-7, 2, valinit=1)
 slN =  Slider(axN, 'N', 1., 3, valinit=2)
 
 def draw(N,aC,rC):         
@@ -42,7 +42,7 @@ def draw(N,aC,rC):
         ca = cos(aC)
         sa = sin(aC)
         for j in range(N): 
-            rho = j/N+0.51/N
+            rho = sqrt(abs(rC-1)) + (1-sqrt(abs(rC-1))) *j/N
             rho2 = rho*rho
             rho4 = rho2*rho2
             rs2 = rC*rC
