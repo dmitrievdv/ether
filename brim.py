@@ -22,8 +22,8 @@ axSrMbutt = axes([0.05, 0.025, 0.15, 0.04])
 
 slaC =  Slider(axaC, r'$\varphi_t$', -pi, pi, valinit=0)
 slrC =  Slider(axrC, r'$\rho_t$', 0, 4, valinit=1)
-slM =  Slider(axM, r'$\mu$', 0, 2*pi, valinit=1)
-slN =  Slider(axN, 'N', 1., 4, valinit=2.)
+slM =  Slider(axM, r'$\mu$', 1, 100, valinit=1)
+slN =  Slider(axN, 'N', 1., 3, valinit=2.)
 bSrM = Button(axSrMbutt, r'$\mu$ switch')
 
 R=[]
@@ -35,26 +35,20 @@ def draw():
 
     C = rC*(cos(aC) + 1j*sin(aC))
     if R :
-        mu = slM.val
-        k = 1
-        for i in range(1,50):
-            mup=mu*i/2/pi
-            if abs(int(mup)-mup)*50<1:
-                k = i
-                break
+        rmu = int(slM.val)
         P = poly1d([1])
-        for i in range(k):
-            P = P*poly1d([1,C*sin(i*2*pi/k)])
+        for i in range(rmu):
+            P = P*poly1d([1,C*sin(i*2*pi/rmu)])
         s = []
         Po = P[0]
         for i in range(N):
-            P[0]=Po+exp(1j*2*pi/(i+1))
+            P[0]=Po-exp(1j*2*pi/(i+1))
             s.extend(P.r)
         s = array(s)
-        sc = max(abs(s))/2
+        sc = max(abs(s))/(1+rC*rC/4)
 
         l.set_data(s.real/sc,s.imag/sc)
-        ax.set_title('B(t), den: {:2}, scale: {:<.2e}'.format(k,sc) )
+        ax.set_title('B(t), den: {:2}, scale: {:<.2e}'.format(rmu,sc) )
 
     else:
 
@@ -94,4 +88,3 @@ slaC.on_changed(update)
 slN.on_changed(update)
 slM.on_changed(update)
 show()
-
