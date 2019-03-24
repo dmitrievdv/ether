@@ -23,7 +23,7 @@ axSrMbutt = axes([0.05, 0.025, 0.15, 0.04])
 slaC =  Slider(axaC, r'$\varphi_t$', -pi, pi, valinit=0)
 slrC =  Slider(axrC, r'$\rho_t$', 0, 4, valinit=1)
 slM =  Slider(axM, r'$\mu$', 1, 100, valinit=1)
-slN =  Slider(axN, 'N', 1., 3, valinit=2.)
+slN =  Slider(axN, 'N', 1., 3, valinit=1.)
 bSrM = Button(axSrMbutt, r'$\mu$ switch')
 
 R=[]
@@ -39,11 +39,13 @@ def draw():
         P = poly1d([1])
         for i in range(rmu):
             P = P*poly1d([1,C*sin(i*2*pi/rmu)])
-        s = []
         Po = P[0]
+        s = []
         for i in range(N):
-            P[0]=Po-exp(1j*2*pi/(i+1))
-            s.extend(P.r)
+            for k in range(i+1):
+                P[0]=Po-exp(1j*2*pi*k/(i+1))
+                s.extend(P.r)
+
         s = array(s)
         sc = max(abs(s))/(1+rC*rC/4)
 
