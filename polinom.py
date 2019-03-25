@@ -10,8 +10,8 @@ ax.set_title( 'B(t)' )
 # ax = axes[0]
 
 subplots_adjust(left=0.25, bottom=0.25) 
-brim, = plot([1], [0], 'b.', markersize=0.5)
-pol_brim, = plot([1], [0], 'r.',markersize=1.5)
+brim, = plot([1], [0], '.', color = 'royalblue', markersize=3)
+pol_brim, = plot([1], [0], 'r.',markersize=1)
 ax.axis('scaled')
 ax.set_xlim(-2,2)
 ax.set_ylim(-2,2)
@@ -26,8 +26,8 @@ axSrMbutt = axes([0.05, 0.125, 0.15, 0.04])
 # slS =  Slider(axS, 'S', -pi, pi, valinit=pi/2)
 slrt =  Slider(axrt, r'$r$', 0, 1, valinit=0.5)
 slpt =  Slider(axpt, r'$\phi$', -pi, pi, valinit=0)
-slN = Slider(axN, 'N', 0, 100, valinit=10)
-slrN = Slider(axrN, 'one roots degree', 1, 20, valinit=10)
+slN = Slider(axN, 'N', 0, 20, valinit=4)
+slrN = Slider(axrN, 'one roots degree', 1, 80, valinit=20)
 bSrM = Button(axSrMbutt, r'$t/s$ switch')
 
 R = 1
@@ -59,7 +59,7 @@ def draw(val):
         roots = array(roots)
         # print(abs(pol(roots)))
         brim_real = []; brim_imag = []
-        P = 400
+        P = (rN*rN*N)//4
         for k in range(P+1):
             argS = k/P*pi*2
             x = cos(argS)*(1+rt*rt)
@@ -96,7 +96,7 @@ def draw(val):
         roots = array(roots)
         pol_brim.set_data(roots.real,roots.imag)
         # print(abs(pol(roots)))
-        P = 100
+        P = (rN*rN*N)//16
         frill_real=[]
         frill_imag=[]
 
