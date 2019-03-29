@@ -8,7 +8,8 @@ import matplotlib.text as txt
 fig, ax = subplots()
 ax.set_title( 'scale: {:<.2e}'.format(1.0) )
 subplots_adjust(left=0.25, bottom=0.25) 
-l, = plot([1], [0], 'r.',markersize=1.)
+l, = plot([1], [0], 'r.',markersize=1.) 
+lp, = plot([1], [0], 'b.',markersize=2.)
 ax.axis('scaled')
 ax.set_xlim(-1,1)
 ax.set_ylim(-1,1)
@@ -23,15 +24,17 @@ axSrMbutt = axes([0.05, 0.025, 0.15, 0.04])
 axSpi = axes([0.05, 0.135, 0.15, 0.06])
 axFpi = axes([0.05, 0.205, 0.15, 0.06])
 axCpi = axes([0.05, 0.275, 0.15, 0.06])
+axSvbutt = axes([0.05, 0.325, 0.15, 0.04])
 # SrMtxt = txt.Text(text = '1.0')
 
 slS =  Slider(axS, r'$\varphi$', -pi, pi, valinit=pi/2)
 slM =  Slider(axM, r'$\mu$', -4, 4, valinit=1)
 slC =  Slider(axC, r'$\rho_t$', 0., 1, valinit=.5)
 slF =  Slider(axF, r'$\varphi_t$', 0, pi, valinit=pi/3)
-slN =  Slider(axN, 'N', 0., 5, valinit=3.)
+slN =  Slider(axN, 'N', 0., 5, valinit=3.5)
 tbSrM = TextBox(axSrM, r'$\varphi/\mu$')
 bSrM = Button(axSrMbutt, 'inverse')
+bSv = Button(axSvbutt, 'save')
 tbSpi = TextBox(axSpi, r'$\pi/\varphi$')
 tbFpi = TextBox(axFpi, r'$\pi/\varphi_t$')
 tbCpi = TextBox(axCpi, r'$\rho_t$')
@@ -61,12 +64,15 @@ def draw():
             if abs(an)> mabs:
                 mabs = abs(an)
             an = an *(S + C*sin(n*M))
-    l.set_data(a.real/mabs, a.imag/mabs)
+    a = a/mabs
+    l.set_data(a.real, a.imag)
+    lp.set_data(a.real[::4], a.imag[::4])
     ax.set_title('scale: {:<.2e}'.format(mabs) )
-    ax.axis('scaled')
-    ax.set_xlim(-1,1)
-    ax.set_ylim(-1,1)
+    # ax.axis('scaled')
+    # ax.set_xlim(-1,1)
+    # ax.set_ylim(-1,1)
     fig.canvas.draw_idle()
+    return a
 
 def update_n(val):
     if(SrMset):
@@ -154,11 +160,15 @@ def update_cpi(val):
     slC.set_val(float(tbCpi.text))
     update(val)
 
-    
+def save(val):
+    a = draw()
+    a.tofile('petal.dat')
+        
 
 # print()
 update_n(1)
 bSrM.on_clicked(inverse_rel)
+bSv.on_clicked(save)
 slS.on_changed(update)
 slN.on_changed(update_n)
 slM.on_changed(update)
