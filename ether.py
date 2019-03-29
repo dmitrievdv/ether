@@ -162,7 +162,8 @@ def update_cpi(val):
 
 def save(val):
     a = draw()
-    a.tofile('petal.dat')
+    cuta = a[::int(2*float(tbSpi.text))]
+    cuta.tofile('petal.dat')
         
 
 # print()
@@ -179,4 +180,3 @@ tbSpi.on_submit(update_spi)
 tbCpi.on_submit(update_cpi)
 tbFpi.on_submit(update_fpi)
 show()
-
