@@ -66,13 +66,13 @@ def draw():
             an = an *(S + C*sin(n*M))
     a = a/mabs
     l.set_data(a.real, a.imag)
-    lp.set_data(a.real[::4], a.imag[::4])
+    # lp.set_data(a.real[::4], a.imag[::4])
     ax.set_title('scale: {:<.2e}'.format(mabs) )
     # ax.axis('scaled')
     # ax.set_xlim(-1,1)
     # ax.set_ylim(-1,1)
     fig.canvas.draw_idle()
-    return a
+    return a*mabs
 
 def update_n(val):
     if(SrMset):
@@ -162,7 +162,12 @@ def update_cpi(val):
 
 def save(val):
     a = draw()
-    cuta = a[::int(2*float(tbSpi.text))]
+    rN = slS.val/(2*pi)
+    for M in range(1,20):
+        if abs(int(rN*M)-rN*M)<1e-3:
+            break
+    print(M)
+    cuta = a[::M]
     cuta.tofile('petal.dat')
         
 
