@@ -13,8 +13,8 @@ subplots_adjust(left=0.25, bottom=0.25)
 brim, = plot([1], [0], '.', color = 'royalblue', markersize=3)
 pol_brim, = plot([1], [0], 'r.',markersize=1)
 ax.axis('scaled')
-ax.set_xlim(-2,2)
-ax.set_ylim(-2,2)
+ax.set_xlim(-3,3)
+ax.set_ylim(-3,3)
 
 # axS = axes([0.25, 0.16, 0.65, 0.03], facecolor='gray')
 axrt = axes([0.25, 0.15, 0.65, 0.03], facecolor='grey')
@@ -24,10 +24,10 @@ axrN = axes([0.25, 0.03, 0.65, 0.03], facecolor='grey')
 axSrMbutt = axes([0.05, 0.125, 0.15, 0.04])
 
 # slS =  Slider(axS, 'S', -pi, pi, valinit=pi/2)
-slrt =  Slider(axrt, r'$r$', 0, 1, valinit=0.5)
+slrt =  Slider(axrt, r'$r$', 0, 3, valinit=0.5)
 slpt =  Slider(axpt, r'$\phi$', -pi, pi, valinit=0)
 slN = Slider(axN, 'N', 0, 20, valinit=4)
-slrN = Slider(axrN, 'one roots degree', 1, 80, valinit=20)
+slrN = Slider(axrN, 'one roots degree', 1, 180, valinit=20)
 bSrM = Button(axSrMbutt, r'$t/s$ switch')
 
 R = 1
@@ -37,6 +37,11 @@ def draw(val):
     rt = slrt.val
     rN = int(floor(slrN.val))
     N = int(floor(slN.val))
+    one_roots = [1.0]
+    for k in range(1,rN):
+        for m in range(1,k):
+            if(gcd(m,k) == 1):
+                one_roots.append(exp(1.0j*2*m*pi/k))
     if R:
         ax.set_title( 'B(t)' )
         t = rt*2*(cos(pt)+1j*sin(pt))
@@ -44,11 +49,6 @@ def draw(val):
                            for m in range(N)], 
                            dtype = 'complex128')
         pol = poly1d(fund_roots, r=True)
-        one_roots = [1.0]
-        for k in range(1,rN):
-            for m in range(1,k):
-                if(gcd(m,k) == 1):
-                    one_roots.append(exp(1.0j*2*m*pi/k))
         roots = []
         for one in one_roots:
             one_pol = poly1d([one])
@@ -59,19 +59,20 @@ def draw(val):
         roots = array(roots)
         # print(abs(pol(roots)))
         brim_real = []; brim_imag = []
-        P = (rN*rN*N)//4
-        for k in range(P+1):
-            argS = k/P*pi*2
-            x = cos(argS)*(1+rt*rt)
-            y = (1-rt*rt)*sin(argS)
-            brim_real.append(x*cos(pt)-y*sin(pt)) 
-            brim_imag.append(y*cos(pt)+x*sin(pt))
+        if rt<1:
+            P = (rN*rN*N)//4
+            for k in range(P+1):
+                argS = k/P*pi*2
+                x = cos(argS)*(1+rt*rt)
+                y = (1-rt*rt)*sin(argS)
+                brim_real.append(x*cos(pt)-y*sin(pt)) 
+                brim_imag.append(y*cos(pt)+x*sin(pt))
 
         pol_brim.set_data(roots.real,roots.imag)
         brim.set_data(brim_real, brim_imag)
         # ll.set_data
     else:
-        rt = rt*2
+        # rt = rt*2
         ax.set_title( 'F(s)' )
         s = rt*(cos(pt)+1j*sin(pt))
         
@@ -81,11 +82,6 @@ def draw(val):
                 [2*sin(m*2*pi/N),s], 
                 dtype = 'complex128')
             )
-        one_roots = [1.0]
-        for k in range(1,rN):
-            for m in range(1,k):
-                if(gcd(m,k) == 1):
-                    one_roots.append(exp(1.0j*2*m*pi/k))
         roots = []
         for one in one_roots:
             one_pol = poly1d([one])
@@ -96,30 +92,30 @@ def draw(val):
         roots = array(roots)
         pol_brim.set_data(roots.real,roots.imag)
         # print(abs(pol(roots)))
-        P = (rN*rN*N)//16
         frill_real=[]
         frill_imag=[]
-
-        ca = cos(pt)
-        sa = sin(pt)
-        for j in range(P): 
-            rho = sqrt(abs(rt-1)) + (1-sqrt(abs(rt-1))) *j/P
-            rho2 = rho*rho
-            rho4 = rho2*rho2
-            rs2 = rt*rt
-            c2 = rs2 - 1 + (2 + rs2)*rho4 - rho4*rho4
-            c2 = c2/rs2/rho2
-            if abs(c2)<=2:
-                c = rho*sqrt(c2 + 2)/2
-                s = rho*sqrt(2 - c2)/2
-                frill_real.append( ca*c - sa*s)
-                frill_imag.append( sa*c + ca*s)
-                frill_real.append( sa*s - ca*c)
-                frill_imag.append(-sa*c - ca*s)
-                frill_real.append( ca*c + sa*s)
-                frill_imag.append( sa*c - ca*s)
-                frill_real.append(-sa*s - ca*c)
-                frill_imag.append( ca*s - sa*c)
+        if rt<2:
+            P = (rN*rN*N)//16
+            ca = cos(pt)
+            sa = sin(pt)
+            for j in range(P): 
+                rho = sqrt(abs(rt-1)) + (1-sqrt(abs(rt-1))) *j/P
+                rho2 = rho*rho
+                rho4 = rho2*rho2
+                rs2 = rt*rt
+                c2 = rs2 - 1 + (2 + rs2)*rho4 - rho4*rho4
+                c2 = c2/rs2/rho2
+                if abs(c2)<=2:
+                    c = rho*sqrt(c2 + 2)/2
+                    s = rho*sqrt(2 - c2)/2
+                    frill_real.append( ca*c - sa*s)
+                    frill_imag.append( sa*c + ca*s)
+                    frill_real.append( sa*s - ca*c)
+                    frill_imag.append(-sa*c - ca*s)
+                    frill_real.append( ca*c + sa*s)
+                    frill_imag.append( sa*c - ca*s)
+                    frill_real.append(-sa*s - ca*c)
+                    frill_imag.append( ca*s - sa*c)
         brim.set_data(frill_real,frill_imag)
         
 
