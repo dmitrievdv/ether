@@ -30,8 +30,8 @@ axSvbutt = axes([0.05, 0.025, 0.15, 0.04])
 
 slS =  Slider(axS, r'$\chi$', -pi, pi, valinit=pi/2)
 slM =  Slider(axM, r'$\mu$', -4, 4, valinit=1)
-slC =  Slider(axC, r'$\rho_t$', 0., 1, valinit=.5)
-slF =  Slider(axF, r'$\varphi_t$', 0, pi, valinit=pi/3)
+slC =  Slider(axC, r'$\rho_t$', 0., 1, valinit=.75)
+slF =  Slider(axF, r'$\varphi_t$', -pi, pi, valinit=pi/2)
 slN =  Slider(axN, 'N', 3., 5, valinit=3.5)
 tbSrM = TextBox(axSrM, r'$\mu$')
 bSv = Button(axSvbutt, 'save petal')
@@ -138,9 +138,9 @@ def petal(a):
 
 def draw():
     N = int(exp(slN.val*log(1e1)))
-    F = slF.val
+    F = slF.val - slS.val 
     M = slM.val
-    argS = slS.val - F 
+    argS = slS.val 
     # tbSpi.set_text(slS.val/pi)
 
     z = slC.val**2
@@ -161,10 +161,10 @@ def draw():
             if abs(an)> mabs:
                 mabs = abs(an)
             an = an *(S + C*sin(n*M))
-    rN = slS.val/(2*pi)
+    rN = slF.val/(2*pi)
     MM = 99
     for M in range(1,MM+1):
-        if abs(int(rN*M)-rN*M)<1/MM/MM:
+        if abs(round(rN*M)-rN*M)<1/MM/MM:
             break
     if M<MM:
         lie,oma,ona,rad  = petal(a[::M])
