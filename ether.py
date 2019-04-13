@@ -5,6 +5,7 @@ from random import random as rnd
 from matplotlib.widgets import Slider, TextBox, Button
 import matplotlib.text as txt
 from scipy.optimize import curve_fit as crvfit
+from numpy.polynomial.legendre import leggauss
 
 fig, ax = subplots()
 ax.set_title( 'scale: {:<.2e}'.format(1.0) )
@@ -24,13 +25,15 @@ axSrM = axes([0.05, 0.065, 0.15, 0.06])
 axSpi = axes([0.05, 0.135, 0.15, 0.06])
 axFpi = axes([0.05, 0.205, 0.15, 0.06])
 axCpi = axes([0.05, 0.275, 0.15, 0.06])
+axAP = axes([0.05, 0.345, 0.15, 0.06])
+axlf = axes([0.05, 0.445, 0.2, 0.06])
 axSvbutt = axes([0.05, 0.025, 0.15, 0.04]) 
 # axSrMbutt = axes([0.05, 0.325, 0.15, 0.04])
 # SrMtxt = txt.Text(text = '1.0')
-
-slS =  Slider(axS, r'$\chi$', -pi, pi, valinit=pi/2)
+                              # 1.5559549046215868 
+slS =  Slider(axS, r'$\chi$', -pi,pi , valinit=1.5559548642369434 )
 slM =  Slider(axM, r'$\mu$', -4, 4, valinit=1)
-slC =  Slider(axC, r'$\rho_t$', 0., 1, valinit=.75)
+slC =  Slider(axC, r'$\rho_t$', 0., 1, valinit=.7)
 slF =  Slider(axF, r'$\varphi_t$', -pi, pi, valinit=pi/2)
 slN =  Slider(axN, 'N', 3., 5, valinit=3.5)
 tbSrM = TextBox(axSrM, r'$\mu$')
@@ -38,10 +41,18 @@ bSv = Button(axSvbutt, 'save petal')
 tbSpi = TextBox(axSpi, r'$\frac{2\pi}{\chi}$')
 tbFpi = TextBox(axFpi, r'$\frac{2\pi}{\varphi_t}$')
 tbCpi = TextBox(axCpi, r'$\rho_t$')
+tbAP = TextBox(axAP, r'$N_{ptls}$')
+tblf = TextBox(axlf, r'$\lambda\,s\,:$')
 # bSrM = Button(axSrMbutt, 'inverse')
 # SrMset = False
 # SrMinv = False
 
+# some functions :) 
+# Func = lambda s: exp(s*s)*s/(s*s+1)
+# Func = lambda s: s/(1-s*s+s*s*s*s)
+# Func = lambda s: s/(.5+s*s)
+# Func = lambda s: (1-2*s*s)/(2+s) 
+Func = lambda s: s
 
 def petal(a):
     N = a.shape[-1]
@@ -50,8 +61,9 @@ def petal(a):
     pf = fft.fftfreq(N)[1:N//2]
     asp = abs(sp)
 
-    profile = lambda x, A, M, S: A/(1 + (x - M)**2/S**2)
-    # profile = lambda x, A, M, S: A*exp(-(x - M)**2/S**2) 
+    profileL = lambda x, A, M, S: A/(1 + abs(x - M)/S)
+    profileN = lambda x, A, M, S: A*exp(-(x - M)**2/S**2) 
+    profile =  lambda x, A, M, S: A*(exp(-(x - M)**2/S**2) + 1/(1 + abs(x - M)/S))
     mix = []
     masp = amax(asp)
     for i in range(len(asp)):
@@ -136,50 +148,95 @@ def petal(a):
     return lie,oma,ona,rad
 
 
+
+Ng = 16
+Nl = 16
+gk, gw = leggauss(Ng)
+gk = (gk+1)/2
+lk, lw = linspace(0,2*pi,Nl+1,retstep=True)
+    
+
 def draw():
     N = int(exp(slN.val*log(1e1)))
+    Nbin = int(slN.val*3.321928)+7
     F = slF.val - slS.val 
     M = slM.val
     argS = slS.val 
     # tbSpi.set_text(slS.val/pi)
 
-    z = slC.val**2
-    C = slC.val*2*(cos(F)+1j*sin(F))
-    x = cos(argS)*(1+z)
-    y = (1-z)*sin(argS)
-    S = x*cos(F)-y*sin(F) + 1j*(y*cos(F)+x*sin(F))
+    # z = slC.val**2
+    # C = slC.val*2*(cos(F)+1j*sin(F))
+    # x = cos(argS)*(1+z)
+    # y = (1-z)*sin(argS)
+    # S = x*cos(F)-y*sin(F) + 1j*(y*cos(F)+x*sin(F))
+    sv = 1e3
+    dsv = sv/2
+    cf = cos(argS)
+    sf = sin(argS)
+    C = slC.val*2
+    def logrho1(ro,theta):
+        return log((cf*ro+C*Func(sin(theta)))**2+sf*ro*sf*ro)
+
+    while (dsv/sv>1e-16 and sv>1e-16):
+        s = 0
+        for k in range(Nl):
+            for j in range(Ng):
+                s+=logrho1(sv, lk[k]+lw*gk[j])*gw[j]
+        if s>0:
+            sv-=dsv
+        else:
+            sv+=dsv
+        dsv/=2
+    
+    
+
+    S = sv*exp(1j*F)*exp(1j*argS)
+    C = C*exp(1j*F)
+    print(argS,F,sv)
+
     try: 
+        1/0
         from ethercalc import compute
-        a, mabs = compute.fundamental(S, C, M, N)
+        a, mabs, mibs = compute.fundamental(S, C, M, N)
+        print('fort')
     except:
         rN =range(N)
         a = zeros((N,),dtype = complex)
         an = 1
         mabs = 1
+        mibs = 1
         for n in rN:
             a[n] = an
             if abs(an)> mabs:
                 mabs = abs(an)
-            an = an *(S + C*sin(n*M))
+            if abs(an)< mibs:
+                mibs = abs(an)
+            an = an *(S + C*Func(sin(n*M)))
     rN = slF.val/(2*pi)
     MM = 99
     for M in range(1,MM+1):
         if abs(round(rN*M)-rN*M)<1/MM/MM:
             break
-    if M<MM:
+    try:
+        M = int(tbAP.text)
         lie,oma,ona,rad  = petal(a[::M])
-        lp.set_data(ona.real/mabs,ona.imag/mabs)
+        lp.set_data(ona.real,ona.imag)
         L = lie [-1]
-    else:
+
+    except:
         lp.set_data([0],[0])
         M = 0
         L = 0
 
-    a = a/mabs
+    # a = a/mabs
     l.set_data(a.real, a.imag)
+    # print(slS.val,mibs,mabs     )
     # lp.set_data(a.real[::4], a.imag[::4])
-    ax.set_title('scale: {:<.2e}\n petals: {}, of length {:<.3f}'.format(mabs,M,L) )
-    # ax.axis('scaled')
+    ax.set_title('outer radius: {:<.2e}; inner radius: {:<.2e}\n petals: {}, of length {:<.3f}'.format(mabs,mibs,M,L) )
+
+    ax.axis('scaled')
+    ax.set_xlim(-mabs,mabs)
+    ax.set_ylim(-mabs,mabs)
     # ax.set_xlim(-1,1)
     # ax.set_ylim(-1,1)
     fig.canvas.draw_idle()
@@ -275,14 +332,15 @@ def update_cpi(val):
     slC.set_val(float(tbCpi.text))
     update(val)
 
+def update_func(val):
+    global Func
+    Func = eval('lambda s : '+ tblf.text)
+    update(val)
+
 def save(val):
     print('ololol')
     a = draw()
-    rN = slS.val/(2*pi)
-    for M in range(1,100):
-        if abs(int(rN*M)-rN*M)<1e-3:
-            break
-    print(M)
+    M = int(tbAP.text)
     cuta = a[::M]
     cuta.tofile('petal.dat')
         
@@ -297,6 +355,8 @@ slF.on_changed(update)
 tbSrM.on_submit(update_srm)
 tbSpi.on_submit(update_spi)
 tbCpi.on_submit(update_cpi)
+tbAP.on_submit(update)
+tblf.on_submit(update_func)
 bSv.on_clicked(save)
 tbFpi.on_submit(update_fpi)
 # bSrM.on_clicked(inverse_rel)
