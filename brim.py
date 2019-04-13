@@ -7,22 +7,31 @@ from matplotlib.widgets import Slider, TextBox, Button
 import matplotlib.text as txt
 from scipy.optimize import curve_fit as crvfit
 
-fig, ax = subplots()
+fig, (sax, ax,) = subplots(1,2)
 ax.set_title( 'scale: {:<.2e}'.format(1.0) )
-subplots_adjust(left=0.25, bottom=0.25) 
-lp, = plot([0], [0], 'b-',markersize=1.)
-l, = plot([1], [0], 'r.',markersize=2.) 
+sax.set_title( r'$\lambda(\sin(t))$' )
+# subplots_adjust(left=0.25, bottom=0.25) 
+ax.set_position([0.3,.25,.66,.66])
+sax.set_position([0.05,.66,.22,.22])
+# subplots_adjust(left=0.25, bottom=0.25) 
+lp, = ax.plot([0], [0], 'b-',markersize=1.)
+l, = ax.plot([1], [0], 'r.',markersize=2.) 
+fl, = sax.plot([1], [0], 'k-',markersize=1.) 
 ax.axis('scaled')
 ax.set_xlim(-1,1)
 ax.set_ylim(-1,1)
+sax.set_xlim(0,2*pi)
+sax.set_xticks([0,pi/2,pi,1.5*pi,2*pi])
+sax.set_xticklabels(['0',r'$\pi$',r'2$\pi$'])
+sax.set_xticklabels(['0',r'$\frac{\pi}{2}$',r'$\pi$',r'$\frac{3\pi}{2}$',r'2$\pi$'])
 
-axS = axes([0.25, 0.17, 0.65, 0.03], facecolor='gray')
-axP = axes([0.25, 0.13, 0.65, 0.03], facecolor='grey')
+axS = axes([0.25, 0.15, 0.65, 0.03], facecolor='gray')
+axP = axes([0.25, 0.1, 0.65, 0.03], facecolor='grey')
 # axC = axes([0.25, 0.09, 0.65, 0.03], facecolor='grey')
 # axF = axes([0.25, 0.05, 0.65, 0.03], facecolor='grey')
-axN = axes([0.25, 0.01, 0.65, 0.03], facecolor='green')
-axlf = axes([0.05, 0.445, 0.2, 0.06])
-axSrM = axes([0.05, 0.065, 0.15, 0.06])
+axN = axes([0.25, 0.05, 0.65, 0.03], facecolor='green')
+axlf = axes([0.05, 0.5, 0.22, 0.06])
+# axSrM = axes([0.05, 0.065, 0.15, 0.06])
 
 
 slS =  Slider(axS, r'$\rho_t$', 0,1 , valinit=0.5)
@@ -31,7 +40,7 @@ slP =  Slider(axP, r'$\varphi_t$', -pi, pi, valinit=0)
 # slF =  Slider(axF, r'$\varphi$', -pi, pi, valinit=0)
 slN =  Slider(axN, 'N', 0, 3, valinit=1.)
 tblf = TextBox(axlf, r'$\lambda\,s\,:$')
-tbSrM = TextBox(axSrM, r'$\rho_{max}$')
+# tbSrM = TextBox(axSrM, r'$\rho_{max}$')
 
 
 # Func = lambda s: exp(s*s)*s/(s*s+1)
@@ -46,6 +55,14 @@ def draw(val):
     C = slS.val*rhom#exp(slS.val)
     phis = linspace(0,pi/2,N)
     S = zeros((4*N,),dtype = complex)
+
+    ns = linspace(0,2*pi,100)
+    Fs = Func(sin(ns))
+    lamax = amax(abs(Fs))
+    fl.set_data(ns, Fs)
+    sax.set_ylim(-lamax,lamax)
+    sax.set_yticks([-1,0,1])
+
 
     def logrho1(ro,theta):
         return log((cf*ro+C*Func(sin(theta)))**2+sf*ro*sf*ro)
@@ -98,13 +115,14 @@ def update_func(val):
     global Func
     Func = eval('lambda s : '+ tblf.text)
     draw(val)
-def update_rhom(val):
-    global rhom 
-    try:
-        rhom = float(tbSrM.text)
-    except:
-        rhom = 2
-    draw(val)
+
+# def update_rhom(val):
+#     global rhom 
+#     try:
+#         rhom = float(tbSrM.text)
+#     except:
+#         rhom = 2
+#     draw(val)
 
 draw(1)
 slS.on_changed(draw)
@@ -112,7 +130,7 @@ slP.on_changed(draw)
 slN.on_changed(draw)
 
 tblf.on_submit(update_func)
-tbSrM.on_submit(update_rhom)
+# tbSrM.on_submit(update_rhom)
 # slC.on_changed(update)
 # slF.on_changed(update)
 show()
