@@ -16,10 +16,11 @@ def petal(a):
 
     profile = lambda x, A, M, S: A/(1 + (x - M)**2/S**2)
     # profile = lambda x, A, M, S: A*exp(-(x - M)**2/S**2) 
+    profile =  lambda x, A, M, S: A*(exp(-(x - M)**2/S**2) + 1/(1 + abs(x - M)/S))
     mix = []
     masp = amax(asp)
     for i in range(len(asp)):
-        if asp[i]> masp/2:
+        if asp[i]> masp/4:
             mix.append((i,asp[i]))
 
     Ps = []
@@ -30,10 +31,10 @@ def petal(a):
         cupft=linspace(cupf[0],cupf[-1],200)
         Ps.append(abs(1/p[1]))
 
-        plot(cupft,profile(cupft,p[0],p[1],p[2]),'b-')
-        plot(cupf,casp,'r.')
-    plot(pf,asp,'-')
-    show()
+    #     plot(cupft,log(profile(cupft,p[0],p[1],p[2]) ),'b-')
+    #     plot(cupf,log(casp),'r.')
+    # plot(pf,log(asp),'-')
+    # show()
 
 
     # print(Ps)
