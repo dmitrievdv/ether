@@ -7,26 +7,35 @@ import matplotlib.text as txt
 from scipy.optimize import curve_fit as crvfit
 from numpy.polynomial.legendre import leggauss
 
-fig, ax = subplots()
+fig, (sax, ax,) = subplots(1,2)
 ax.set_title( 'scale: {:<.2e}'.format(1.0) )
-subplots_adjust(left=0.25, bottom=0.25) 
-l, = plot([1], [0], 'r.',markersize=1.) 
-lp, = plot([0], [0], 'b-',markersize=2.)
+sax.set_title( r'$\lambda(\sin(t))$' )
+# subplots_adjust(left=0.25, bottom=0.25) 
+ax.set_position([0.3,.25,.66,.66])
+sax.set_position([0.05,.66,.22,.22])
+# subplots_adjust(left=0.25, bottom=0.25) 
+l, = ax.plot([1], [0], 'r.',markersize=2.) 
+lp, = ax.plot([0], [0], 'b-',markersize=1.)
+fl, = sax.plot([1], [0], 'k-',markersize=1.) 
 ax.axis('scaled')
 ax.set_xlim(-1,1)
 ax.set_ylim(-1,1)
+sax.set_xlim(0,2*pi)
+sax.set_xticks([0,pi/2,pi,1.5*pi,2*pi])
+sax.set_xticklabels(['0',r'$\pi$',r'2$\pi$'])
+sax.set_xticklabels(['0',r'$\frac{\pi}{2}$',r'$\pi$',r'$\frac{3\pi}{2}$',r'2$\pi$'])
 
 axS = axes([0.25, 0.17, 0.65, 0.03], facecolor='gray')
 axM = axes([0.25, 0.13, 0.65, 0.03], facecolor='grey')
 axC = axes([0.25, 0.09, 0.65, 0.03], facecolor='grey')
 axF = axes([0.25, 0.05, 0.65, 0.03], facecolor='grey')
 axN = axes([0.25, 0.01, 0.65, 0.03], facecolor='green')
-axSrM = axes([0.05, 0.065, 0.15, 0.06])
+axAP = axes([0.05, 0.065, 0.15, 0.06])
+axSrM = axes([0.05, 0.345, 0.15, 0.06])
 axSpi = axes([0.05, 0.135, 0.15, 0.06])
 axFpi = axes([0.05, 0.205, 0.15, 0.06])
 axCpi = axes([0.05, 0.275, 0.15, 0.06])
-axAP = axes([0.05, 0.345, 0.15, 0.06])
-axlf = axes([0.05, 0.445, 0.2, 0.06])
+axlf = axes([0.05, 0.5, 0.22, 0.06])
 axSvbutt = axes([0.05, 0.025, 0.15, 0.04]) 
 # axSrMbutt = axes([0.05, 0.325, 0.15, 0.04])
 # SrMtxt = txt.Text(text = '1.0')
@@ -67,7 +76,7 @@ def petal(a):
     mix = []
     masp = amax(asp)
     for i in range(len(asp)):
-        if asp[i]> masp/3:
+        if asp[i]> masp/30:
             mix.append((i,asp[i]))
 
     width = pf[0]
@@ -169,6 +178,10 @@ def draw():
     # x = cos(argS)*(1+z)
     # y = (1-z)*sin(argS)
     # S = x*cos(F)-y*sin(F) + 1j*(y*cos(F)+x*sin(F))
+
+
+
+
     sv = 1e3
     dsv = sv/2
     cf = cos(argS)
@@ -192,7 +205,7 @@ def draw():
 
     S = sv*exp(1j*F)*exp(1j*argS)
     C = C*exp(1j*F)
-    print(argS,F,sv)
+    print(2*pi/argS,F,sv)
 
     try: 
         1/0
@@ -220,7 +233,7 @@ def draw():
     try:
         M = int(tbAP.text)
         lie,oma,ona,rad  = petal(a[::M])
-        lp.set_data(ona.real,ona.imag)
+        lp.set_data(ona.real/mabs,ona.imag/mabs)
         L = lie [-1]
 
     except:
@@ -228,19 +241,26 @@ def draw():
         M = 0
         L = 0
 
-    # a = a/mabs
-    l.set_data(a.real, a.imag)
-    # print(slS.val,mibs,mabs     )
-    # lp.set_data(a.real[::4], a.imag[::4])
+
+    ns = linspace(0,2*pi,100)
+    Fs = Func(sin(ns))
+    lamax = amax(abs(Fs))
+    fl.set_data(ns, Fs)
+    sax.set_ylim(-lamax,lamax)
+    sax.set_yticks([-1,0,1])
+
+    l.set_data(a.real/mabs, a.imag/mabs)
     ax.set_title('outer radius: {:<.2e}; inner radius: {:<.2e}\n petals: {}, of length {:<.3f}'.format(mabs,mibs,M,L) )
 
-    ax.axis('scaled')
-    ax.set_xlim(-mabs,mabs)
-    ax.set_ylim(-mabs,mabs)
+    # ax.axis('scaled')
+    # ax.set_xlim(-mabs,mabs)
+    # ax.set_ylim(-mabs,mabs)
     # ax.set_xlim(-1,1)
     # ax.set_ylim(-1,1)
     fig.canvas.draw_idle()
     return a*mabs
+
+    # -3.586811173 
 
 # def update_n(val):
 #     if(SrMset):
