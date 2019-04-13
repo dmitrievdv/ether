@@ -53,8 +53,8 @@ rhom = 2
 def draw(val):
     N = int(exp(slN.val*log(1e1)))
     C = slS.val*rhom#exp(slS.val)
-    phis = linspace(0,pi/2,N)
-    S = zeros((4*N,),dtype = complex)
+    phis = linspace(0,pi*2,N)
+    S = zeros((N,),dtype = complex)
 
     ns = linspace(0,2*pi,100)
     Fs = Func(sin(ns))
@@ -95,9 +95,9 @@ def draw(val):
         cS = conj(pS)*exp(1j*slP.val)
         pS = pS*exp(1j*slP.val)
         S[i]=pS
-        S[2*N+i]=-pS
-        S[2*N-i-1]=-cS
-        S[4*N-i-1]=cS
+        # S[2*N+i]=-pS
+        # S[2*N-i-1]=-cS
+        # S[4*N-i-1]=cS
 
     # a = a/mabs
     l.set_data(S.real, S.imag)
