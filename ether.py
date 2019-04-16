@@ -9,7 +9,7 @@ from numpy.polynomial.legendre import leggauss
 
 fig, (sax, ax,) = subplots(1,2)
 ax.set_title( 'scale: {:<.2e}'.format(1.0) )
-sax.set_title( r'$\lambda(w)$' )
+sax.set_title( r'$\ln|f(w)|$' )
 # subplots_adjust(left=0.25, bottom=0.25) 
 ax.set_position([0.3,.25,.66,.66])
 sax.set_position([0.05,.66,.22,.22])
@@ -195,9 +195,9 @@ def draw():
             s+=logrho1(1., lk[k]+lw*gk[j])*gw[j]
     sv = exp(-s*lw/4/pi)
 
+    print(2*pi/argS,2*pi/slF.val,slC.val,slM.val,sv,sv*(1-C),sv*C)
     S = sv*exp(1j*F)*exp(1j*argS)*(1-C)
     C = sv*exp(1j*F)*C
-    print(2*pi/argS,2*pi/slF.val,slC.val,slM.val,sv)
 
     try: 
         1/0
@@ -236,11 +236,11 @@ def draw():
 
 
     ns = linspace(0,2*pi,100)
-    Fs = abs(S + C*Func(ns))
-    lamax = amax(Fs)
+    Fs = log(abs(S + C*Func(ns)))
+    lamax = amax(abs(Fs))
     fl.set_data(ns, Fs)
-    sax.set_ylim(0,lamax)
-    sax.set_yticks([0,1])
+    sax.set_ylim(-lamax,lamax)
+    sax.set_yticks([0])
 
     l.set_data(a.real/mabs, a.imag/mabs)
     ax.set_title('outer radius: {:<.2e}; inner radius: {:<.2e}\n dim: {:<.2f} petals: {}, of length {:<.3f}'.format(mabs,mibs,dim,M,L) )
