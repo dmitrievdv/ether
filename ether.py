@@ -9,7 +9,7 @@ from numpy.polynomial.legendre import leggauss
 
 fig, (sax, ax,) = subplots(1,2)
 ax.set_title( 'scale: {:<.2e}'.format(1.0) )
-sax.set_title( r'$\lambda(\sin(t))$' )
+sax.set_title( r'$\lambda(w)$' )
 # subplots_adjust(left=0.25, bottom=0.25) 
 ax.set_position([0.3,.25,.66,.66])
 sax.set_position([0.05,.66,.22,.22])
@@ -22,7 +22,6 @@ ax.set_xlim(-1,1)
 ax.set_ylim(-1,1)
 sax.set_xlim(0,2*pi)
 sax.set_xticks([0,pi/2,pi,1.5*pi,2*pi])
-sax.set_xticklabels(['0',r'$\pi$',r'2$\pi$'])
 sax.set_xticklabels(['0',r'$\frac{\pi}{2}$',r'$\pi$',r'$\frac{3\pi}{2}$',r'2$\pi$'])
 
 axS = axes([0.25, 0.17, 0.65, 0.03], facecolor='gray')
@@ -40,9 +39,9 @@ axSvbutt = axes([0.05, 0.025, 0.15, 0.04])
 # axSrMbutt = axes([0.05, 0.325, 0.15, 0.04])
 # SrMtxt = txt.Text(text = '1.0')
                               # 1.5559549046215868 
-slS =  Slider(axS, r'$\chi$', -pi,pi , valinit=1.5559548642369434 )
+slS =  Slider(axS, r'$\chi$', -pi,pi , valinit=pi/2 )
 slM =  Slider(axM, r'$\mu$', -4, 4, valinit=1)
-slC =  Slider(axC, r'$\rho_t$', 0., 1, valinit=.7)
+slC =  Slider(axC, r'$\rho_t$', 0., 1, valinit=.5)
 slF =  Slider(axF, r'$\varphi_t$', -pi, pi, valinit=pi/2)
 slN =  Slider(axN, 'N', 3., 5, valinit=3.5)
 tbSrM = TextBox(axSrM, r'$\mu$')
@@ -62,6 +61,7 @@ tblf = TextBox(axlf, r'$\lambda\,s\,:$')
 # Func = lambda s: s/(.5+s*s)
 # Func = lambda s: (1-2*s*s)/(2+s) 
 Func = lambda s: s
+Func = lambda s: sin(s)# exp(1j*s)
 
 def petal(a):
     N = a.shape[-1]
@@ -76,7 +76,7 @@ def petal(a):
     mix = []
     masp = amax(asp)
     for i in range(len(asp)):
-        if asp[i]> masp/30:
+        if asp[i]> masp/180:
             mix.append((i,asp[i]))
 
     width = pf[0]
@@ -159,20 +159,23 @@ def petal(a):
 
 
 Ng = 16
-Nl = 16
+Nl = 160
 gk, gw = leggauss(Ng)
 gk = (gk+1)/2
-lk, lw = linspace(0,2*pi,Nl+1,retstep=True)
+lk, lw = linspace(0,2*pi,Nl+1, retstep=True)
     
 
 def draw():
     N = int(exp(slN.val*log(1e1)))
+    Nnet = int(exp(slN.val*log(1e1)/4))
     Nbin = int(slN.val*3.321928)+7
     F = slF.val - slS.val 
-    M = slM.val
+    Mu = slM.val
     argS = slS.val 
-    # tbSpi.set_text(slS.val/pi)
 
+    net = zeros((Nnet+1,Nnet+1),dtype=int)
+    net2 = zeros((Nnet*4+1,Nnet*4+1),dtype=int)
+  
     # z = slC.val**2
     # C = slC.val*2*(cos(F)+1j*sin(F))
     # x = cos(argS)*(1+z)
@@ -180,37 +183,26 @@ def draw():
     # S = x*cos(F)-y*sin(F) + 1j*(y*cos(F)+x*sin(F))
 
 
-
-
-    sv = 1e3
-    dsv = sv/2
     cf = cos(argS)
     sf = sin(argS)
-    C = slC.val*2
+    C = slC.val
     def logrho1(ro,theta):
-        return log((cf*ro+C*Func(sin(theta)))**2+sf*ro*sf*ro)
+        return log( abs( (cf+1j*sf)*ro*(1-C)+ro*(C)*Func(theta)) )
 
-    while (dsv/sv>1e-16 and sv>1e-16):
-        s = 0
-        for k in range(Nl):
-            for j in range(Ng):
-                s+=logrho1(sv, lk[k]+lw*gk[j])*gw[j]
-        if s>0:
-            sv-=dsv
-        else:
-            sv+=dsv
-        dsv/=2
-    
-    
+    s = 0
+    for k in range(Nl):
+        for j in range(Ng):
+            s+=logrho1(1., lk[k]+lw*gk[j])*gw[j]
+    sv = exp(-s*lw/4/pi)
 
-    S = sv*exp(1j*F)*exp(1j*argS)
-    C = C*exp(1j*F)
-    print(2*pi/argS,F,sv)
+    S = sv*exp(1j*F)*exp(1j*argS)*(1-C)
+    C = sv*exp(1j*F)*C
+    print(2*pi/argS,2*pi/slF.val,slC.val,slM.val,sv)
 
     try: 
         1/0
         from ethercalc import compute
-        a, mabs, mibs = compute.fundamental(S, C, M, N)
+        a, mabs, mibs = compute.fundamental(S, C, Mu, N)
         print('fort')
     except:
         rN =range(N)
@@ -224,12 +216,13 @@ def draw():
                 mabs = abs(an)
             if abs(an)< mibs:
                 mibs = abs(an)
-            an = an *(S + C*Func(sin(n*M)))
-    rN = slF.val/(2*pi)
-    MM = 99
-    for M in range(1,MM+1):
-        if abs(round(rN*M)-rN*M)<1/MM/MM:
-            break
+            an = an *(S + C*Func(n*Mu))
+
+    # for an in a:
+    #     # print()
+    #     net[ int((an.real/mabs+1)*Nnet/2), int((an.imag/mabs+1)*Nnet/2) ] = 1
+    #     net2[ int((an.real/mabs+1)*Nnet*2), int((an.imag/mabs+1)*Nnet*2) ] = 1
+    dim = log(sum(net2)/sum(net))/log(4)
     try:
         M = int(tbAP.text)
         lie,oma,ona,rad  = petal(a[::M])
@@ -243,129 +236,74 @@ def draw():
 
 
     ns = linspace(0,2*pi,100)
-    Fs = Func(sin(ns))
-    lamax = amax(abs(Fs))
+    Fs = abs(S + C*Func(ns))
+    lamax = amax(Fs)
     fl.set_data(ns, Fs)
-    sax.set_ylim(-lamax,lamax)
-    sax.set_yticks([-1,0,1])
+    sax.set_ylim(0,lamax)
+    sax.set_yticks([0,1])
 
     l.set_data(a.real/mabs, a.imag/mabs)
-    ax.set_title('outer radius: {:<.2e}; inner radius: {:<.2e}\n petals: {}, of length {:<.3f}'.format(mabs,mibs,M,L) )
+    ax.set_title('outer radius: {:<.2e}; inner radius: {:<.2e}\n dim: {:<.2f} petals: {}, of length {:<.3f}'.format(mabs,mibs,dim,M,L) )
 
-    # ax.axis('scaled')
-    # ax.set_xlim(-mabs,mabs)
-    # ax.set_ylim(-mabs,mabs)
-    # ax.set_xlim(-1,1)
-    # ax.set_ylim(-1,1)
     fig.canvas.draw_idle()
     return a*mabs
 
-    # -3.586811173 
-
-# def update_n(val):
-#     if(SrMset):
-#         update_rel(val)
-#     else:
-#         update(val)
 
     
 def update(val):
-    # global SrMset
-    # if(SrMset and not SrMinv):
-    #     slM.disconnect(0)
-    #     slM.cnt = 0
-    #     slM.on_changed(update)
-    # elif(SrMset):
-    #     slS.disconnect(0)
-    #     slS.cnt = 0
-    #     slS.on_changed(update)
+
     draw()
-    # SrMset = False
-
-# def update_txt(val):
-#     global SrMset
-#     if(not SrMinv):
-#         slM.disconnect(0)       
-#         slM.cnt = 0
-#         cid = slM.on_changed(update_rel)
-#     else:
-#         slS.disconnect(0)
-#         slS.cnt = 0
-#         slS.on_changed(update_rel)
-#     update_rel(val)
-#     SrMset = True
-
-# def update_rel(val):
-#     global SrMset
-#     if(not SrMinv):
-#         M = slM.val
-#         argS = float(tbSrM.text)*M
-#         SrMset = False
-#         slS.set_val(argS)
-#         SrMset = True
-#     else:
-#         argS = slS.val
-#         M = float(tbSrM.text)*argS
-#         SrMset = False
-#         slM.set_val(M)
-#         SrMset = True
-#     draw()
-    
-# def inverse_rel(val):
-#     global SrMinv
-#     SrMinv = not SrMinv
-#     tbSrM.label.set_visible(False)
-#     tbSrM.text_disp.set_visible(False)
-#     initial = tbSrM.text
-#     if(not SrMinv):
-#         tbSrM.__init__(axSrM, r'$\varphi/\mu$', initial = initial)
-#         tbSrM.on_submit(update_txt)
-#         slS.disconnect(0)
-#         slS.cnt = 0
-#         slS.on_changed(update)
-#     else:
-#         tbSrM.__init__(axSrM, r'$\mu/\varphi$', initial = initial)
-#         tbSrM.on_submit(update_txt)
-#         slM.disconnect(0)
-#         slM.cnt = 0
-#         slM.on_changed(update)
-#     try: 
-#         update_txt(val) 
-#     except:
-#         pass 
 
 def update_spi(val):
-    slS.set_val(2*pi/float(tbSpi.text))
+    try :
+        slS.set_val(2*pi/float(tbSpi.text))
+    except:
+        pass
     update(val)
 
  
 def update_fpi(val):
-    slF.set_val(2*pi/float(tbFpi.text))
+    try :
+        slF.set_val(2*pi/float(tbFpi.text))
+    except:
+        pass
     update(val)
 
 def update_srm(val):
-    slM.set_val(float(tbSrM.text))
+    try :
+        slM.set_val(float(tbSrM.text))
+    except:
+        pass
     update(val)
 
  
 def update_cpi(val):
-    slC.set_val(float(tbCpi.text))
+    try :
+        slC.set_val(float(tbCpi.text))
+    except:
+        pass
     update(val)
 
 def update_func(val):
     global Func
-    Func = eval('lambda s : '+ tblf.text)
+    try :
+        Func = eval('lambda s : '+ tblf.text)
+    except:
+        pass
     update(val)
 
 def save(val):
-    print('ololol')
+    print('petal saved')
     a = draw()
-    M = int(tbAP.text)
+    try: 
+        M = int(tbAP.text)
+    except:
+        M = 1
     cuta = a[::M]
     cuta.tofile('petal.dat')
         
 
-# print()
+# print() ro 0.1757649
 update(1)
 slS.on_changed(update)
 slN.on_changed(update)
