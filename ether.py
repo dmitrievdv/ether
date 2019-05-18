@@ -50,7 +50,7 @@ slF =  Slider(axF, r'$P2$', -1, 1, valinit=0)
 slN =  Slider(axN, 'N', 3., 5, valinit=3.5)
 tbSrM = TextBox(axSrM, r'$\mu$')
 bSv = Button(axSvbutt, 'save petal')
-tbSpi = TextBox(axSpi, r'$\frac{2\pi}{\chi}$')
+tbSpi = TextBox(axSpi, r'${\chi}$')
 tbFpi = TextBox(axFpi, r'$P2$')
 tbCpi = TextBox(axCpi, r'$P1$')
 tbAP = TextBox(axAP, r'$N_{ptls}$')
@@ -277,7 +277,7 @@ def update(val):
 
 def update_spi(val):
     try :
-        slS.set_val(2*pi/float(tbSpi.text))
+        slS.set_val(eval(tbSpi.text))
     except:
         pass
     update(val)
