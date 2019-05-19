@@ -12,7 +12,7 @@ ax.set_title( 'scale: {:<.2e}'.format(1.0) )
 sax.set_title( r'$\lambda\, s$' )
 # subplots_adjust(left=0.25, bottom=0.25) 
 ax.set_position([0.3,.3,.66,.6])
-sax.set_position([0.0,.5,.33,.33])
+sax.set_position([0.0,.6,.33,.33])
 # subplots_adjust(left=0.25, bottom=0.25) 
 l, = ax.plot([1], [0], 'r.',markersize=2.) 
 lp, = ax.plot([0], [0], 'b-',markersize=1.)
@@ -29,35 +29,38 @@ ax.set_ylim(-1,1)
 # sax.set_xticklabels(['0',r'$\frac{\pi}{2}$',r'$\pi$',r'$\frac{3\pi}{2}$',r'2$\pi$'])
 
 axlf = axes([0.25, 0.21, 0.65, 0.04])
-axS = axes([0.25, 0.17, 0.65, 0.03], facecolor='gray')
-axM = axes([0.25, 0.13, 0.65, 0.03], facecolor='grey')
-axC = axes([0.25, 0.09, 0.65, 0.03], facecolor='grey')
-axF = axes([0.25, 0.05, 0.65, 0.03], facecolor='grey')
-axN = axes([0.25, 0.01, 0.65, 0.03], facecolor='green')
-axAP = axes([0.05, 0.065, 0.15, 0.06])
-axSrM = axes([0.05, 0.345, 0.15, 0.06])
-axSpi = axes([0.05, 0.135, 0.15, 0.06])
-axFpi = axes([0.05, 0.205, 0.15, 0.06])
-axCpi = axes([0.05, 0.275, 0.15, 0.06])
-axSvbutt = axes([0.05, 0.025, 0.15, 0.04]) 
-# axSrMbutt = axes([0.05, 0.325, 0.15, 0.04])
-# SrMtxt = txt.Text(text = '1.0')
-                              # 1.5559549046215868 
-slS =  Slider(axS, r'$\chi$', -pi,pi , valinit=0 )
-slM =  Slider(axM, r'$\mu$', -4, 4, valinit=0)
-slC =  Slider(axC, r'$P1$', -1., 1, valinit=0)
-slF =  Slider(axF, r'$P2$', -1, 1, valinit=0)
+axX = axes([0.25, 0.17, 0.65, 0.025], facecolor='darkred')
+axM = axes([0.25, 0.14, 0.65, 0.025], facecolor='darkred')
+axP0 = axes([0.25, 0.105, 0.65, 0.025], facecolor='grey')
+axP1 = axes([0.25, 0.075, 0.65, 0.025], facecolor='grey')
+axP2 = axes([0.25, 0.045, 0.65, 0.025], facecolor='grey')
+axN = axes([0.25, 0.01, 0.65, 0.025], facecolor='darkgreen')
+axAP = axes([0.05, 0.06, 0.15, 0.05])
+axXt = axes([0.05, 0.13, 0.05, 0.05])
+axXm = axes([0.15, 0.13, 0.05, 0.05])
+axP2t = axes([0.05, 0.20, 0.15, 0.05])
+axP1t = axes([0.05, 0.27, 0.15, 0.05])
+axP0t = axes([0.05, 0.34, 0.15, 0.05])
+axMt = axes([0.05, 0.41, 0.15, 0.05])
+axSPb = axes([0.05, 0.03, 0.15, 0.03]) 
+
+slX =  Slider(axX, r'$\chi$', -pi,pi , valinit=-pi/2 ,valfmt = "%1.5f")
+slM =  Slider(axM, r'$\mu$', -4, 4, valinit=-2,valfmt = "%1.5f")
+slP0 =  Slider(axP0, r'$P0$', -1, 1, valinit=-.5,valfmt = "%1.5f")
+slP1 =  Slider(axP1, r'$P1$', -1., 1, valinit=-.5,valfmt = "%1.5f")
+slP2 =  Slider(axP2, r'$P2$', -1, 1, valinit=-.5,valfmt = "%1.5f")
 slN =  Slider(axN, 'N', 3., 5, valinit=3.5)
-tbSrM = TextBox(axSrM, r'$\mu$')
-bSv = Button(axSvbutt, 'save petal')
-tbSpi = TextBox(axSpi, r'${\chi}$')
-tbFpi = TextBox(axFpi, r'$P2$')
-tbCpi = TextBox(axCpi, r'$P1$')
+
+bSP = Button(axSPb, 'save petal')
+
+tbM = TextBox(axMt, r'$\mu$')
+tbXt = TextBox(axXt, r'${\chi=\tau\times}$')
+tbXm = TextBox(axXm, r'${+\mu\times}$')
+tbP2 = TextBox(axP2t, r'$P2$')
+tbP1 = TextBox(axP1t, r'$P1$')
+tbP0 = TextBox(axP0t, r'$P0$')
 tbAP = TextBox(axAP, r'$N_{ptls}$')
 tblf = TextBox(axlf, r'$\lambda\,s\,:$')
-# bSrM = Button(axSrMbutt, 'inverse')
-# SrMset = False
-# SrMinv = False
 
 # some functions :) 
 # Func = lambda s: sin(s)# exp(1j*s)
@@ -68,9 +71,6 @@ tblf = TextBox(axlf, r'$\lambda\,s\,:$')
 Ellipse = lambda a, s: (a*a+1)*cos(s) + (1-a*a)*1j*sin(s)
 Quellipse = lambda a, s: 4j*a**2*cos(s)**2 + (sqrt(4-2*a*a)-sqrt(2)*a)**2*sin(s)**2
 # Func = lambda s: Ellipse(1,s)/(1-sin(s)*sin(s)+sin(s)*sin(s)*sin(s)*sin(s)) 
-# P1 = 1
-# P2 = 0 
-# Func = lambda s: P1+exp(1j*P2)*sin(s)
 
 
 def petal(a):
@@ -179,41 +179,50 @@ def draw():
     N = int(exp(slN.val*log(1e1)))
     Nnet = int(exp(slN.val*log(1e1)/4))
     Nbin = int(slN.val*3.321928)+7
-    argS = slS.val 
-    Mu = exp(slM.val)
-    P1 = slC.val #- slS.val 
-    P2 = slF.val #- slS.val 
-    try :
-        Funct = eval('lambda s, P1, P2: '+ tblf.text)
-        Func = lambda s: Funct(s,P1,P2)
-    except:
-        Func = lambda s: P1*2+exp(1j*P2*pi)*sin(s)
+    argS = slX.val 
+    Mu = slM.val
+    P0 = slP0.val
+    P1 = slP1.val #- slX.val 
+    P2 = slP2.val #- slX.val 
+    if True: #tries 
+        try :
+            Funct = eval('lambda s, P0, P1, P2: '+ tblf.text)
+            Func = lambda s: Funct(s,P0,P1,P2)
+        except:
+            S = cos(P2*pi)*(1+P1**2)+1j*(1-P1**2)*sin(P2*pi)
+            C = P1*2
+            MS = -1j*P2*pi
+            MC = tan(P0*pi/2)
+            Func = lambda s: (S+C*sin(s))*exp(MS+cos(s)*MC)
+            # Func = lambda s: cos(s)*(1+P1)+1j*(1-P1)*sin(s)+exp(-1j*P2*pi+tan(P0*pi/2))
+            Func = lambda s: cos(s)*(1+P1)+1j*(1-P1)*sin(s)+exp(1j*pi*P2+tan(P0*pi/2))
+            # Func = lambda s: (cos(P2*pi)*(1+P1**2)+1j*(1-P1**2)*sin(P2*pi)+P1*2*sin(s))*exp(-1j*P2*pi+cos(s)*tan(P0*pi/2))
 
     net = zeros((Nnet+1,Nnet+1),dtype=int)
     net2 = zeros((Nnet*4+1,Nnet*4+1),dtype=int)
   
-    # z = slC.val**2
-    # C = slC.val*2*(cos(F)+1j*sin(F))
-    # x = cos(argS)*(1+z)
-    # y = (1-z)*sin(argS)
-    # S = x*cos(F)-y*sin(F) + 1j*(y*cos(F)+x*sin(F))
-    # cf = cos(argS)
-    # sf = sin(argS)
-    # C = 1-exp(-slC.val*20)
-    def logrho1(ro,theta):
+    def logrho1(theta):
         return log( abs( Func(theta)) )
 
     s = 0
+    c = 0
+    cp = angle(Func(0.0))
+    pk = 0 
     for k in range(Nl):
         for j in range(Ng):
-            s+=logrho1(1., lk[k]+lw*gk[j])*gw[j]
-    # s = s*lw/2
-    # sv = exp(-s*lw/2/pi)
-    S = exp(1j*argS-s*lw/4/pi) 
-    try:
-        print(2*pi/argS,2*pi/slF.val,slC.val,slM.val,sv,sv*(1-C),sv*C)
-    except:
-        pass
+            s+=log(abs(Func(lk[k]+lw*gk[j])))*gw[j]
+            cn = angle(Func(lk[k]+lw*gk[j]))+pk*2*pi
+            if abs(cn-cp)>pi:
+                pk += sign(cp-cn)
+                cn += sign(cp-cn)*2*pi
+            cp = cn 
+            # s += log(Func(lk[k]+lw*gk[j]))*gw[j]
+            # c += cn*gw[j]
+            c += cn*gw[j]
+    # print(tog - s - 1j*c)
+    s = s+1j*c
+    print(slX.val,slM.val,slP0.val,slP1.val,slP2.val,s*lw/4/pi,angle(-1j))
+    R = exp(1j*argS-s*lw/4/pi) 
 
     try: 
         1/0
@@ -232,13 +241,8 @@ def draw():
                 mabs = abs(an)
             if abs(an)< mibs:
                 mibs = abs(an)
-            an = an *(S*Func(n*Mu))
+            an = an *(R*Func(n*Mu))
 
-    # for an in a:
-    #     # print()
-    #     net[ int((an.real/mabs+1)*Nnet/2), int((an.imag/mabs+1)*Nnet/2) ] = 1
-    #     net2[ int((an.real/mabs+1)*Nnet*2), int((an.imag/mabs+1)*Nnet*2) ] = 1
-    # dim = log(sum(net2)/sum(net))/log(4)
     try:
         M = int(tbAP.text)
         lie,oma,ona,rad,T  = petal(a[::M])
@@ -253,7 +257,7 @@ def draw():
 
 
     ns = linspace(0,2*pi,1000)
-    Fs = S*Func(ns)
+    Fs = R*Func(ns)
     lamax = amax(abs(Fs))
     fl.set_data(Fs.real, Fs.imag)
     fp.set_data(sin(ns), cos(ns))
@@ -275,35 +279,48 @@ def update(val):
 
     draw()
 
-def update_spi(val):
+def update_chi(val):
+    chi = 0  
     try :
-        slS.set_val(eval(tbSpi.text))
+        slX.set_val(2*pi*eval(tbXt.text))
+        chi = slX.val
+    except:
+        pass 
+    try :
+        slX.set_val(chi+slM.val*eval(tbXm.text))
     except:
         pass
     update(val)
 
+
+def update_mu(val):
+    try :
+        slM.set_val(eval(tbM.text))
+    except:
+        pass
+    update(val)
+
+def update_p0(val):
+    try :
+        slP0.set_val(eval(tbP0.text))
+    except:
+        pass
+    update(val)
  
-def update_fpi(val):
+def update_p1(val):
     try :
-        slF.set_val(float(tbFpi.text))
+        slP1.set_val(eval(tbP1.text))
     except:
         pass
-    update(val)
-
-def update_srm(val):
-    try :
-        slM.set_val(float(tbSrM.text))
-    except:
-        pass
-    update(val)
-
+    update(val) 
  
-def update_cpi(val):
+def update_p2(val):
     try :
-        slC.set_val(float(tbCpi.text))
+        slP2.set_val(eval(tbP2.text))
     except:
         pass
     update(val)
+
 
 def update_func(val):
 
@@ -313,27 +330,36 @@ def save(val):
     print('petal saved')
     a = draw()
     try: 
-        M =  eval(tbAP.text)
+        M =  int(tbAP.text)
     except:
         M = 1
     cuta = a[::M]
     cuta.tofile('petal.dat')
         
 
-# print() ro 0.1757649
 update(1)
-slS.on_changed(update)
 slN.on_changed(update)
-slM.on_changed(update)
-slC.on_changed(update)
-slF.on_changed(update)
-tbSrM.on_submit(update_srm)
-tbSpi.on_submit(update_spi)
-tbCpi.on_submit(update_cpi)
-tbAP.on_submit(update)
+
+slP0.on_changed(update)
+slP1.on_changed(update)
+slP2.on_changed(update)
+
+slX.on_changed(update)
+slM.on_changed(update_chi)
+
+tbXt.on_submit(update_chi)
+tbXm.on_submit(update_chi)
+
+tbM.on_submit(update_mu)
+
+tbP0.on_submit(update_p0)
+tbP1.on_submit(update_p1)
+tbP2.on_submit(update_p2)
+
 tblf.on_submit(update_func)
-bSv.on_clicked(save)
-tbFpi.on_submit(update_fpi)
-# bSrM.on_clicked(inverse_rel)
+
+tbAP.on_submit(update)
+
+bSP.on_clicked(save)
 
 show()
