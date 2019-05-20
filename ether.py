@@ -45,7 +45,7 @@ axMt = axes([0.05, 0.41, 0.15, 0.05])
 axSPb = axes([0.05, 0.03, 0.15, 0.03]) 
 
 slX =  Slider(axX, r'$\chi$', -pi,pi , valinit=-pi/2 ,valfmt = "%1.5f")
-slM =  Slider(axM, r'$\mu$', -4, 4, valinit=-2,valfmt = "%1.5f")
+slM =  Slider(axM, r'$\nu$', -4, 4, valinit=-2,valfmt = "%1.5f")
 slP0 =  Slider(axP0, r'$P0$', -1, 1, valinit=-.5,valfmt = "%1.5f")
 slP1 =  Slider(axP1, r'$P1$', -1., 1, valinit=-.5,valfmt = "%1.5f")
 slP2 =  Slider(axP2, r'$P2$', -1, 1, valinit=-.5,valfmt = "%1.5f")
@@ -53,9 +53,9 @@ slN =  Slider(axN, 'N', 3., 5, valinit=3.5)
 
 bSP = Button(axSPb, 'save petal')
 
-tbM = TextBox(axMt, r'$\mu$')
+tbM = TextBox(axMt, r'$\nu$')
 tbXt = TextBox(axXt, r'${\chi=\tau\times}$')
-tbXm = TextBox(axXm, r'${+\mu\times}$')
+tbXm = TextBox(axXm, r'${+\nu\times}$')
 tbP2 = TextBox(axP2t, r'$P2$')
 tbP1 = TextBox(axP1t, r'$P1$')
 tbP0 = TextBox(axP0t, r'$P0$')
@@ -180,7 +180,7 @@ def draw():
     Nnet = int(exp(slN.val*log(1e1)/4))
     Nbin = int(slN.val*3.321928)+7
     argS = slX.val 
-    Mu = slM.val
+    nu = slM.val
     P0 = slP0.val
     P1 = slP1.val #- slX.val 
     P2 = slP2.val #- slX.val 
@@ -189,45 +189,42 @@ def draw():
             Funct = eval('lambda s, P0, P1, P2: '+ tblf.text)
             Func = lambda s: Funct(s,P0,P1,P2)
         except:
-            S = cos(P2*pi)*(1+P1**2)+1j*(1-P1**2)*sin(P2*pi)
-            C = P1*2
-            MS = -1j*P2*pi
-            MC = tan(P0*pi/2)
-            Func = lambda s: (S+C*sin(s))*exp(MS+cos(s)*MC)
-            # Func = lambda s: cos(s)*(1+P1)+1j*(1-P1)*sin(s)+exp(-1j*P2*pi+tan(P0*pi/2))
-            Func = lambda s: cos(s)*(1+P1)+1j*(1-P1)*sin(s)+exp(1j*pi*P2+tan(P0*pi/2))
+            # Func = lambda s: cos(s)*(1+P1)+1j*(1-P1)*sin(s)+exp(1j*pi*P2+tan(P0*pi/2))
+            
+            # Func = lambda s: cos(s)**2*(1+P1)+1j*(1-P1)*sin(s)**2+exp(1j*pi*P2+tan(P0*pi/2))
+            
+            # Func =  lambda s: (1-P1*P1)*exp(1j*s)/(1+P1*cos(s))+exp(1j*pi*P2*3+tan(P0*pi/2))
+            
+            Func =  lambda s: exp(1j*(s+P1*pi+tan(P0*pi/2)*cos(s)))+2/(1+P2)
+
             # Func = lambda s: (cos(P2*pi)*(1+P1**2)+1j*(1-P1**2)*sin(P2*pi)+P1*2*sin(s))*exp(-1j*P2*pi+cos(s)*tan(P0*pi/2))
 
     net = zeros((Nnet+1,Nnet+1),dtype=int)
     net2 = zeros((Nnet*4+1,Nnet*4+1),dtype=int)
   
-    def logrho1(theta):
-        return log( abs( Func(theta)) )
-
+    
     s = 0
     c = 0
     cp = angle(Func(0.0))
-    pk = 0 
+    pik = 0 
     for k in range(Nl):
         for j in range(Ng):
             s+=log(abs(Func(lk[k]+lw*gk[j])))*gw[j]
-            cn = angle(Func(lk[k]+lw*gk[j]))+pk*2*pi
+            cn = angle(Func(lk[k]+lw*gk[j]))
             if abs(cn-cp)>pi:
-                pk += sign(cp-cn)
-                cn += sign(cp-cn)*2*pi
+                pik += sign(cp-cn)*2*pi
+                print(cn-cp,pik)
             cp = cn 
-            # s += log(Func(lk[k]+lw*gk[j]))*gw[j]
-            # c += cn*gw[j]
-            c += cn*gw[j]
-    # print(tog - s - 1j*c)
-    s = s+1j*c
-    print(slX.val,slM.val,slP0.val,slP1.val,slP2.val,s*lw/4/pi,angle(-1j))
-    R = exp(1j*argS-s*lw/4/pi) 
+            c += (cn+pik)*gw[j]
+    
+    # s = s+1j*c
+    print(slX.val,slM.val,slP0.val,slP1.val,slP2.val,c*lw/4/pi)
+    R = exp(1j*argS-(s+1j*c)*lw/4/pi) 
 
     try: 
         1/0
         from ethercalc import compute
-        a, mabs, mibs = compute.fundamental(S, C, Mu, N)
+        a, mabs, mibs = compute.fundamental(S, C, nu, N)
         print('fort')
     except:
         rN =range(N)
@@ -241,7 +238,7 @@ def draw():
                 mabs = abs(an)
             if abs(an)< mibs:
                 mibs = abs(an)
-            an = an *(R*Func(n*Mu))
+            an = an *(R*Func(n*nu))
 
     try:
         M = int(tbAP.text)
@@ -293,7 +290,7 @@ def update_chi(val):
     update(val)
 
 
-def update_mu(val):
+def update_nu(val):
     try :
         slM.set_val(eval(tbM.text))
     except:
@@ -350,7 +347,7 @@ slM.on_changed(update_chi)
 tbXt.on_submit(update_chi)
 tbXm.on_submit(update_chi)
 
-tbM.on_submit(update_mu)
+tbM.on_submit(update_nu)
 
 tbP0.on_submit(update_p0)
 tbP1.on_submit(update_p1)
