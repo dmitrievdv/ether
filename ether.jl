@@ -78,6 +78,42 @@ function fₙ(n::Int, a, b)
 	s = s*16*b/n/π
 	return s
 end
+
+function expfₙ(n::Int, a, b)
+	if n == 0
+		return 0
+	elseif n > 0
+		return 1/2*fₙ(n, a, b)
+	elseif n < 0 
+		return conj(1/2*fₙ(-n, a, b))
+	end
+end
+
+
+function calc_f(m::Int, a, b)
+	function f(x)
+		s = 0
+		for n=-m:m
+			s += expfₙ(n, a, b)*exp(-1.0im*n*x)
+		end
+		return s
+	end 
+	return f
+end
+
+function calc_g(m::Int, a, b)
+	function g(x)
+		s = 0
+		for n=-m:m
+			if(n != 0)
+				s += expfₙ(n, a, b)*(exp(-1.0im*n*x) - sin(n*x + n/2.0)/sin(n/2.0))*exp(-1.0im*n*x)
+			end
+		end
+		return s
+	end 
+	return g
+end
+
 # function get_next(an :: Number, n :: Int)
 # 	return an + sin(n)
 # end
