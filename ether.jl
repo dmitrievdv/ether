@@ -103,12 +103,14 @@ function calc_f(m::Int, a, b)
 end
 
 function calc_g(m::Int, a, b)
+	narr = [1:m;]
+	expf = expfₙ.(narr, a, b)
 	function g(x)
 		s = 0
 		for n=1:m
 			# print(expfₙ(n, a, b)*(exp(-1.0im*n*x) - sin(n*x + n/2.0)/sin(n/2.0))*exp(-1.0im*n*x), "\n")
-			s += expfₙ(n, a, b)*(exp(-1.0im*n*x) - sin(n*x + n/2.0)/sin(n/2.0))*exp(-1.0im*n*x)
-			s += expfₙ(n, a, b)*(exp(1.0im*n*x) - sin(n*x + n/2.0)/sin(n/2.0))*exp(1.0im*n*x)
+			s += expf[n]*(exp(-1.0im*n*x) - sin(n*x + n/2.0)/sin(n/2.0))*exp(-1.0im*n*x)
+			s += expf[n]*(exp(1.0im*n*x) - sin(n*x + n/2.0)/sin(n/2.0))*exp(1.0im*n*x)
 			# print(n, " ", expfₙ(n, a, b), " ", s, "\n")
 		end
 		return s
@@ -124,15 +126,36 @@ function calc_petal(t, φ; n = 10)
 	return calc_g(n, a, 2*t)
 end
 
-function plot_petal(t, φ; nx = 400)
+function plot_petal(t::BigFloat, φ::BigFloat; nx = 400, m = 40)
 	function petal(n); calc_petal(t, φ; n = n); end
 	x = [0:π/nx:π;]
 	pyplot(size = (700, 500))
-	plot(real.(exp.(petal(10).(x))), imag.(exp.(petal(10).(x))), aspect_ratio="equal", label = "10")
-	plot!(real.(exp.(petal(20).(x))), imag.(exp.(petal(20).(x))), aspect_ratio="equal", label = "20")
-	plot!(real.(exp.(petal(30).(x))), imag.(exp.(petal(30).(x))), aspect_ratio="equal", label = "30")
+	@time plot(real.(exp.(petal(m).(x))), imag.(exp.(petal(m).(x))), aspect_ratio="equal", label = string(m))
+	# @time plot!(real.(exp.(petal(20).(x))), imag.(exp.(petal(20).(x))), aspect_ratio="equal", label = "20")
+	# @time plot!(real.(exp.(petal(40).(x))), imag.(exp.(petal(40).(x))), aspect_ratio="equal", label = "40")
 end
 
+function plot_petal(t, φ; nx = 400, m = 30)
+	function petal(n); calc_petal(t, φ; n = n); end
+	x = [0:π/nx:π;]
+	pyplot(size = (700, 500))
+	@time plot(real.(exp.(petal(m).(x))), imag.(exp.(petal(m).(x))), aspect_ratio="equal", label = string(m))
+	# @time plot!(real.(exp.(petal(20).(x))), imag.(exp.(petal(20).(x))), aspect_ratio="equal", label = "20")
+	# @time plot!(real.(exp.(petal(30).(x))), imag.(exp.(petal(30).(x))), aspect_ratio="equal", label = "30")
+end
+
+function gif_petal(t, φ; nx = 2000, mfin=35)
+	function petal(n); calc_petal(t, φ; n = n); end
+	x = [0:π/nx:π;]
+	pyplot(size = (700, 500))
+	anim = @animate for m=1:mfin
+		maxabs = maximum(abs.(exp.(petal(m).(x))))
+    	@time plot(real.(exp.(petal(m).(x)))/maxabs, imag.(exp.(petal(m).(x)))/maxabs, ylims=(-1.1,1.1), xlims = (-1.1,1.1),
+    						 aspect_ratio="equal", label = string(m))
+	end
+	gif(anim, "anim_fps03.gif", fps = 3)
+	gif(anim, "anim_fps06.gif", fps = 6)
+end
 # function get_next(an :: Number, n :: Int)
 # 	return an + sin(n)
 # end
